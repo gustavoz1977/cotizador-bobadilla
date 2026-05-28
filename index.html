@@ -72,8 +72,6 @@ html,body{height:100%;overflow:hidden}
 .db:hover{border-color:#f97316;color:#f97316}
 .db.pri{background:#f97316;border-color:#f97316;color:#fff;font-weight:700}
 .db.pri:hover{background:#e06010}
-.db.imp{border-style:dashed;position:relative}
-.db.imp input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .ditem{background:#1f2937;border:1px solid #374151;border-radius:3px;padding:6px 9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
 .ditem:hover{border-color:#f97316}
 .dname{font-size:13px;font-weight:700;color:#d1d5db}
@@ -192,12 +190,8 @@ html,body{height:100%;overflow:hidden}
     </div>
 
     <div class="tc" data-t="bor">
-      <div class="dbrow">
-        <button class="db pri" id="btn-save">💾 Guardar</button>
-        <button class="db" id="btn-export">⬇ Exportar</button>
-      </div>
       <div class="dbrow" style="margin-bottom:10px">
-        <label class="db imp">⬆ Importar JSON<input type="file" id="import-inp" accept=".json"></label>
+        <button class="db pri" id="btn-save">💾 Guardar</button>
         <button class="db" id="btn-del-all">🗑 Limpiar todo</button>
       </div>
       <div class="fl" style="margin-bottom:5px">Cotizaciones guardadas</div>
@@ -529,35 +523,7 @@ async function delDraft(id){
   toast('Borrador eliminado');
 }
 
-// ── EXPORT / IMPORT ──
-function exportDrafts(){
-  if(!drafts.length){toast('No hay borradores para exportar',true);return;}
-  const blob=new Blob([JSON.stringify(drafts,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download=`borradores-bobadilla-${todayS().replace(/\//g,'-')}.json`;
-  a.click(); URL.revokeObjectURL(url);
-  toast(`✓ ${drafts.length} borrador(es) exportados`);
-}
 
-function importDrafts(file){
-  const reader=new FileReader();
-  reader.onload=async ev=>{
-    try{
-      const data=JSON.parse(ev.target.result);
-      if(!Array.isArray(data))throw new Error();
-      const ids=new Set(drafts.map(d=>d.id));
-      const nuevos=data.filter(d=>d.id&&d.name&&!ids.has(d.id));
-      drafts=[...nuevos,...drafts];
-      if(drafts.length>50)drafts=drafts.slice(0,50);
-      rDrafts();
-      const ok=await saveAll();
-      toast(`✓ ${nuevos.length} borrador(es) importados`+(ok?'':' (sin conexión)'));
-    }catch{ toast('Error: archivo JSON inválido',true); }
-  };
-  reader.readAsText(file);
-}
 
 // ── NUEVA COTIZACIÓN ──
 async function newQuote(){
@@ -633,10 +599,7 @@ async function init(){
 
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>swTab(t.dataset.t)));
   document.getElementById('btn-save').addEventListener('click',saveDraft);
-  document.getElementById('btn-export').addEventListener('click',exportDrafts);
-  document.getElementById('import-inp').addEventListener('change',e=>{
-    const f=e.target.files[0]; if(!f)return; importDrafts(f); e.target.value='';
-  });
+
   document.getElementById('btn-del-all').addEventListener('click',async()=>{
     if(!confirm('¿Eliminar todos los borradores?'))return;
     drafts=[];rDrafts();await saveAll();toast('Borradores eliminados');
