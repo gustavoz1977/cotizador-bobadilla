@@ -93,7 +93,7 @@ html,body{height:100%;overflow:hidden}
 
 /* ── PREVIEW ── */
 #pvw{flex:1;background:#888;overflow:auto;padding:20px;display:flex;flex-direction:column;align-items:center;gap:20px}
-.doc{background:#fff;width:680px;min-width:680px;padding:14px 20px;box-shadow:0 3px 18px rgba(0,0,0,.3);font-family:Arial,sans-serif}
+.doc{background:#fff;width:680px;min-width:680px;min-height:960px;padding:14px 20px;box-shadow:0 3px 18px rgba(0,0,0,.3);font-family:Arial,sans-serif}
 .dhead{display:flex;align-items:center;margin-bottom:6px}
 .dlogw{width:141px;min-width:141px;min-height:107px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .dlogw img{max-width:141px;max-height:107px;object-fit:contain}
@@ -129,10 +129,9 @@ html,body{height:100%;overflow:hidden}
   @page{size:letter portrait;margin:12mm}
   html,body,#app{height:auto;overflow:visible;display:block}
   #editor,#loading{display:none!important}
-  #pvw{padding:0;background:none;gap:0;overflow:visible;display:block}
-  .doc{box-shadow:none;width:100%;min-width:unset;padding:0;page-break-after:always}
-  .doc:last-child{page-break-after:auto}
-  .cont-note{display:none}
+  #pvw{padding:0;background:none;overflow:visible;display:block}
+  .doc{box-shadow:none;width:100%;min-width:unset;min-height:unset;padding:0}
+  .dftr,.dsigs,.dcontact{page-break-inside:avoid}
 }
 </style>
 </head>
@@ -386,28 +385,31 @@ function buildItems(){
 }
 
 // ── PAGINACIÓN ──
-function buildPages(){
-  const rows=S.rows, pages=[];
-  let idx=0, first=true;
-  do {
-    const limit=first?ROWS_P1:ROWS_PN;
-    const chunk=rows.slice(idx,idx+limit);
-    const startIdx=idx; idx+=limit;
-    const isLast=idx>=rows.length;
-    pages.push({rows:chunk,isFirst:first,isLast,startIdx});
-    first=false;
-  } while(idx<rows.length);
-  return pages;
-}
-
-// ── RENDER HOJA ──
-function pageHTML(pg,pageNum,total){
-  const gt=pg.isLast?gTotal():null;
+// ── RENDER DOCUMENTO ÚNICO (browser maneja paginación al imprimir) ──
+function rPreview(){
+  const pvw=document.getElementById('pvw'); if(!pvw)return;
+  const gt=gTotal();
   const logoEl=S.logoB64?`<img src="${S.logoB64}" style="max-width:141px;max-height:107px;object-fit:contain">`:logoSVG();
-  let h=`<div class="doc">`;
 
-  if(pg.isFirst){
-    h+=`<div class="dhead">
+  let rows='';
+  S.rows.forEach((r,i)=>{
+    const sub=rSub(r);
+    rows+=`<tr>
+      <td class="r" style="color:#bbb;font-size:8px">${r.d?i+1:''}</td>
+      <td>${esc(r.d)}&nbsp;</td>
+      <td class="r">${r.q||''}</td>
+      <td class="r">${r.p&&pn(r.p)>0?fmt(pn(r.p)):''}</td>
+      <td class="r">${sub>0?fmt(sub):''}</td>
+    </tr>`;
+  });
+
+  if(gt>0) rows+=`<tr class="trow">
+    <td colspan="4" class="r" style="border-right:1px solid #333">TOTAL:</td>
+    <td class="r">${fmt(gt)}</td>
+  </tr>`;
+
+  pvw.innerHTML=`<div class="doc">
+    <div class="dhead">
       <div class="dlogw">${logoEl}</div>
       <div class="dtitle">
         <div class="dt1">TALLER DE SERVICIO Y SOLDADURA</div>
@@ -423,42 +425,16 @@ function pageHTML(pg,pageNum,total){
       <div class="dcell">PROVEEDOR:&nbsp;<span class="dval">${esc(S.prov)}</span></div>
       <div class="dcell">COTIZACIÓN:&nbsp;<span class="dval">${esc(S.cot)}</span></div>
     </div>
-    <div class="dloc">${S.ubi?S.ubi.toUpperCase()+':':'UBICACIÓN:'}</div>`;
-  } else {
-    h+=`<div class="cont-hd">
-      <div class="cont-title">TALLER BOBADILLA — COT. ${esc(S.cot)}${S.cli?' — '+esc(S.cli):''}</div>
-      <div class="cont-pg">Hoja ${pageNum} de ${total}</div>
-    </div>`;
-  }
-
-  h+=`<table class="dtbl">
-    <colgroup><col style="width:26px"><col><col style="width:46px"><col style="width:78px"><col style="width:82px"></colgroup>
-    <thead><tr>
-      <th class="r">#</th><th>Descripción del trabajo</th>
-      <th class="r">Cant.</th><th class="r">P. Unitario</th><th class="r">Importe</th>
-    </tr></thead><tbody>`;
-
-  pg.rows.forEach((r,li)=>{
-    const gi=pg.startIdx+li+1, sub=rSub(r);
-    h+=`<tr>
-      <td class="r" style="color:#bbb;font-size:8px">${r.d?gi:''}</td>
-      <td>${esc(r.d)}&nbsp;</td>
-      <td class="r">${r.q||''}</td>
-      <td class="r">${r.p&&pn(r.p)>0?fmt(pn(r.p)):''}</td>
-      <td class="r">${sub>0?fmt(sub):''}</td>
-    </tr>`;
-  });
-
-  if(pg.isLast&&gt>0){
-    h+=`<tr class="trow">
-      <td colspan="4" class="r" style="border-right:1px solid #333">TOTAL:</td>
-      <td class="r">${fmt(gt)}</td>
-    </tr>`;
-  }
-  h+=`</tbody></table>`;
-
-  if(pg.isLast){
-    h+=`<div class="dftr">
+    <div class="dloc">${S.ubi?S.ubi.toUpperCase()+':':'UBICACIÓN:'}</div>
+    <table class="dtbl">
+      <colgroup><col style="width:26px"><col><col style="width:46px"><col style="width:78px"><col style="width:82px"></colgroup>
+      <thead><tr>
+        <th class="r">#</th><th>Descripción del trabajo</th>
+        <th class="r">Cant.</th><th class="r">P. Unitario</th><th class="r">Importe</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="dftr">
       <div class="dft-ot"><strong>O. T.</strong>&nbsp;&nbsp;${esc(S.ot)}</div>
       <div class="dft-cr"><strong>CR -</strong>&nbsp;&nbsp;${esc(S.cr)}</div>
       <div class="dft-tot">TOTAL:&nbsp;<span style="font-size:12px">${gt>0?fmt(gt):''}</span></div>
@@ -466,17 +442,8 @@ function pageHTML(pg,pageNum,total){
     <div class="dsigs">
       <div class="dsig">FIRMA</div><div class="dsig">FIRMA</div><div class="dsig">FIRMA</div>
     </div>
-    <div class="dcontact">CÉSAR BOBADILLA RÍOS&nbsp;&nbsp;|&nbsp;&nbsp;CEL. 55 3944 9553 / 55 2116 5737</div>`;
-  } else {
-    h+=`<div class="cont-note">Continúa en la siguiente hoja (${pageNum} de ${total})…</div>`;
-  }
-  return h+`</div>`;
-}
-
-function rPreview(){
-  const pvw=document.getElementById('pvw'); if(!pvw)return;
-  const pages=buildPages();
-  pvw.innerHTML=pages.map((pg,i)=>pageHTML(pg,i+1,pages.length)).join('');
+    <div class="dcontact">CÉSAR BOBADILLA RÍOS&nbsp;&nbsp;|&nbsp;&nbsp;CEL. 55 3944 9553 / 55 2116 5737</div>
+  </div>`;
 }
 
 // ── BORRADORES ──
