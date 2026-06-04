@@ -10,9 +10,6 @@
 html,body{height:100%;overflow:hidden}
 #app{display:flex;flex-direction:column;height:100vh;font-family:'Barlow',Arial,sans-serif}
 
-/* ── AUTH GUARD ── */
-#auth-block{display:none}
-
 /* ── CLIENT BAR ── */
 #client-bar{display:flex;align-items:center;background:#060d18;border-bottom:2px solid #0f1828;height:48px;flex-shrink:0;padding:0 14px;gap:12px;z-index:10}
 .cb-brand{font-size:11px;font-weight:700;letter-spacing:2px;color:#f97316;text-transform:uppercase;white-space:nowrap}
@@ -31,7 +28,7 @@ html,body{height:100%;overflow:hidden}
 .cb-logout{background:transparent;border:1px solid #1e2d45;border-radius:3px;color:#5a6a82;padding:4px 10px;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .2s;font-family:inherit;text-transform:uppercase}
 .cb-logout:hover{border-color:#f97316;color:#f97316}
 
-/* ── MAIN LAYOUT ── */
+/* ── MAIN ── */
 #main{display:flex;flex:1;overflow:hidden}
 
 /* ── EDITOR ── */
@@ -48,6 +45,13 @@ html,body{height:100%;overflow:hidden}
 .tab:hover:not(.on){color:#9ca3af}
 .tc{display:none;flex:1;overflow-y:auto;padding:10px 14px}
 .tc.on{display:block}
+
+/* Doc type toggle */
+.dtype-wrap{display:flex;gap:3px;background:#0a1020;border-radius:4px;padding:3px;margin-bottom:12px}
+.dtype-btn{flex:1;padding:7px 8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;border:none;background:transparent;color:#4b5563;font-family:inherit;transition:all .2s}
+.dtype-btn:hover:not(.on){color:#9ca3af;background:#1f2937}
+.dtype-btn.on.cot{background:#f97316;color:#fff}
+.dtype-btn.on.rep{background:#3b82f6;color:#fff}
 
 /* Campos */
 .fg{margin-bottom:9px}
@@ -83,6 +87,11 @@ html,body{height:100%;overflow:hidden}
 .add-btn{width:100%;background:transparent;border:1px dashed #374151;border-radius:3px;color:#4b5563;padding:5px;font-size:11px;cursor:pointer;margin-top:4px}
 .add-btn:hover{border-color:#f97316;color:#f97316}
 
+/* Reporte editor */
+.rep-ta{width:100%;background:#1f2937;border:1px solid #374151;border-radius:3px;color:#d1d5db;padding:7px 9px;font-size:12px;outline:none;font-family:'Barlow',Arial,sans-serif;resize:none;line-height:1.6;min-height:320px}
+.rep-ta:focus{border-color:#3b82f6}
+.rep-info{font-size:9px;color:#374151;text-align:right;margin-top:3px}
+
 /* Borradores */
 .dbrow{display:flex;gap:5px;margin-bottom:5px}
 .db{flex:1;background:#1f2937;border:1px solid #374151;border-radius:3px;color:#9ca3af;padding:6px;font-size:10px;cursor:pointer;text-align:center}
@@ -93,14 +102,20 @@ html,body{height:100%;overflow:hidden}
 .ditem:hover{border-color:#f97316}
 .dname{font-size:11px;font-weight:700;color:#d1d5db}
 .ddate{font-size:9px;color:#4b5563;margin-top:1px}
+.dtype-badge{font-size:8px;padding:1px 5px;border-radius:2px;font-weight:700;margin-left:5px}
+.dtype-badge.cot{background:rgba(249,115,22,.15);color:#f97316}
+.dtype-badge.rep{background:rgba(59,130,246,.15);color:#3b82f6}
 .ddel{font-size:16px;color:#374151;cursor:pointer;padding:0 3px;line-height:1}
 .ddel:hover{color:#ef4444}
 .no-d{font-size:11px;color:#374151;text-align:center;padding:12px 0}
 
 /* Acciones */
 #ed-foot{padding:10px 14px;border-top:1px solid #1f2937;display:flex;gap:6px;flex-shrink:0}
-.bpr{flex:1;background:#f97316;color:#fff;border:none;border-radius:4px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.8px;font-family:inherit}
-.bpr:hover{background:#e06010}
+.bpr{flex:1;color:#fff;border:none;border-radius:4px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.8px;font-family:inherit;transition:background .2s}
+.bpr.cot{background:#f97316}
+.bpr.cot:hover{background:#e06010}
+.bpr.rep{background:#3b82f6}
+.bpr.rep:hover{background:#2563eb}
 .bnw{background:#1f2937;color:#9ca3af;border:1px solid #374151;border-radius:4px;padding:9px 12px;font-size:12px;cursor:pointer;font-family:inherit}
 .bnw:hover{color:#d1d5db;background:#374151}
 
@@ -116,9 +131,7 @@ html,body{height:100%;overflow:hidden}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ── PREVIEW ── */
-#pvw{flex:1;background:#888;overflow:auto;padding:20px;display:flex;flex-direction:column;align-items:center;gap:0}
-
-/* Documento */
+#pvw{flex:1;background:#888;overflow:auto;padding:20px;display:flex;flex-direction:column;align-items:center}
 .doc{background:#fff;width:680px;min-width:680px;min-height:960px;padding:14px 20px;box-shadow:0 3px 18px rgba(0,0,0,.3);font-family:Arial,sans-serif}
 .dhead{display:flex;align-items:center;margin-bottom:6px}
 .dlogw{width:141px;min-width:141px;min-height:107px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -134,11 +147,16 @@ html,body{height:100%;overflow:hidden}
 .dcell{padding:2px 4px;border-right:1px solid #333;font-size:9px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .dcell:last-child{border-right:none}
 .dloc{border:1px solid #333;border-top:none;padding:2px 4px;font-weight:700;font-size:9px;margin-bottom:3px}
+/* Cotización table */
 .dtbl{width:100%;border-collapse:collapse;margin-bottom:3px;font-size:9px;table-layout:fixed}
 .dtbl th{background:#f0f0f0;border:1px solid #555;padding:2px 4px;font-size:8px;text-transform:uppercase;text-align:left}
 .dtbl th.r,.dtbl td.r{text-align:right}
 .dtbl td{border:1px solid #ddd;padding:2px 4px;min-height:18px}
 .trow td{border-top:2px solid #333;background:#f5f5f5;font-weight:700;font-size:10px}
+/* Reporte body */
+.rep-titulo-doc{border:1px solid #333;border-bottom:none;padding:4px 6px;font-size:10px;font-weight:700}
+.rep-body-doc{border:1px solid #333;padding:8px 10px;font-size:10px;line-height:1.8;min-height:500px;white-space:pre-wrap;word-wrap:break-word;margin-bottom:3px}
+/* Footer */
 .dftr{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #333;margin-bottom:3px}
 .dft-ot{padding:3px 6px;border-right:1px solid #333;font-size:10px}
 .dft-cr{padding:3px 6px;border-right:1px solid #333;font-size:10px}
@@ -161,7 +179,6 @@ html,body{height:100%;overflow:hidden}
 <body>
 
 <div id="app">
-  <!-- CLIENT BAR -->
   <div id="client-bar">
     <div class="cb-brand">Bobadilla</div>
     <div class="cb-sep"></div>
@@ -177,21 +194,26 @@ html,body{height:100%;overflow:hidden}
     </div>
   </div>
 
-  <!-- MAIN -->
   <div id="main">
-    <!-- EDITOR -->
     <div id="editor">
       <div id="ed-hd">
         <div class="brand" id="ed-client-name">✦ CEMEX</div>
         <div id="sync-st">↻ Cargando…</div>
         <div class="tabs">
           <div class="tab on" data-t="datos">📋 Datos</div>
-          <div class="tab" data-t="trab">🔧 Trabajos</div>
+          <div class="tab" data-t="trab" id="tab-trab">🔧 Trabajos</div>
           <div class="tab" data-t="bor">💾 Borradores</div>
         </div>
       </div>
 
+      <!-- TAB: DATOS -->
       <div class="tc on" data-t="datos">
+        <!-- Tipo de documento -->
+        <div class="dtype-wrap">
+          <button class="dtype-btn on cot" data-dt="cotizacion">📋 Cotización</button>
+          <button class="dtype-btn rep"    data-dt="reporte">🔍 Reporte de Daños</button>
+        </div>
+
         <div class="fl" style="margin-bottom:4px">Logo del taller</div>
         <div class="logo-box">
           <input type="file" id="logo-inp" accept="image/*">
@@ -200,10 +222,10 @@ html,body{height:100%;overflow:hidden}
         <div class="g2">
           <div class="fg"><div class="fl">Fecha</div><input class="fi" id="f-fecha"></div>
           <div class="fg">
-            <div class="fl">Cotización #</div>
+            <div class="fl" id="num-label">Cotización #</div>
             <div class="cot-row">
-              <input class="fi" id="f-cot" style="font-weight:700;letter-spacing:1px">
-              <button class="cot-btn" id="btn-cot-rst" title="Ajustar contador">↺</button>
+              <input class="fi" id="f-num" style="font-weight:700;letter-spacing:1px">
+              <button class="cot-btn" id="btn-num-rst" title="Ajustar contador">↺</button>
             </div>
           </div>
         </div>
@@ -219,26 +241,27 @@ html,body{height:100%;overflow:hidden}
         </div>
       </div>
 
+      <!-- TAB: TRABAJOS / REPORTE -->
       <div class="tc" data-t="trab">
         <div id="items-ed"></div>
       </div>
 
+      <!-- TAB: BORRADORES -->
       <div class="tc" data-t="bor">
         <div class="dbrow">
           <button class="db pri" id="btn-save">💾 Guardar</button>
           <button class="db" id="btn-del-all">🗑 Limpiar todo</button>
         </div>
-        <div class="fl" style="margin-bottom:5px">Cotizaciones guardadas</div>
+        <div class="fl" style="margin-bottom:5px">Documentos guardados</div>
         <div id="draft-list"><div class="no-d">No hay borradores</div></div>
       </div>
 
       <div id="ed-foot">
-        <button class="bnw" id="btn-new">+ Nueva</button>
-        <button class="bpr" onclick="window.print()">⎙ Imprimir / PDF</button>
+        <button class="bnw" id="btn-new">+ Nuevo</button>
+        <button class="bpr cot" id="btn-print" onclick="window.print()">⎙ Imprimir / PDF</button>
       </div>
     </div>
 
-    <!-- PREVIEW -->
     <div id="pvw"></div>
   </div>
 </div>
@@ -250,20 +273,18 @@ html,body{height:100%;overflow:hidden}
 <div id="toast"></div>
 
 <script>
-// ── AUTH GUARD ──
-if (!sessionStorage.getItem('bob_auth')) {
-  window.location.replace('../');
-}
+// ── AUTH ──
+if (!sessionStorage.getItem('bob_auth')) window.location.replace('../');
 
 // ── CLIENTES ──
 const CLIENTS = [
-  { id:'cemex',  label:'CEMEX'  },
-  { id:'holcim', label:'HOLCIM' },
-  { id:'cemex2', label:'CEMEX 2'},
-  { id:'cemex3', label:'CEMEX 3'},
+  {id:'cemex',  label:'CEMEX'},
+  {id:'holcim', label:'HOLCIM'},
+  {id:'cemex2', label:'CEMEX 2'},
+  {id:'cemex3', label:'CEMEX 3'},
 ];
 
-// ── BLOB CONFIG ──
+// ── BLOB ──
 const BLOB_BASE = 'https://kanbandevopsgz.blob.core.windows.net/cotizador-data/';
 const SAS = '?sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2027-05-28T07:57:22Z&st=2026-05-27T23:42:22Z&spr=https&sig=a2giTv7vGbpRyCxLlgboG1RbuGlWdBLLtBF9BLaFaec%3D';
 function blobUrl(){ return BLOB_BASE + CLIENTS[activeIdx].id + '-state.json' + SAS; }
@@ -273,7 +294,21 @@ let activeIdx = 0;
 let S = freshState();
 
 function freshState(){
-  return { logoB64:null, fecha:todayS(), cot:'0001', cli:'', prov:'', ubi:'', ot:'', cr:'', rows:initRows(15), counter:1, drafts:[] };
+  return {
+    logoB64: null,
+    docType: 'cotizacion',      // 'cotizacion' | 'reporte'
+    // Cotización
+    fecha: todayS(), cot:'0001', cli:'', prov:'', ubi:'', ot:'', cr:'',
+    rows: initRows(15),
+    counter: 1,
+    // Reporte
+    rep: '0001',
+    reporteTitulo: '',
+    reporteTexto: '',
+    reporteCounter: 1,
+    // Compartido
+    drafts: []
+  };
 }
 
 function eRow(){ return {d:'',q:'',p:''}; }
@@ -284,13 +319,14 @@ function pn(s){ const n=parseFloat((''+(s||'')).replace(/[$,\s]/g,'')); return i
 function rSub(r){ const q=pn(r.q),p=pn(r.p); return q>0&&p>0?q*p:0; }
 function gTotal(){ return S.rows.reduce((a,r)=>a+rSub(r),0); }
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function isCot(){ return S.docType==='cotizacion'; }
 
-// ── LOCAL CACHE ──
+// ── CACHE ──
 function cacheKey(){ return 'bob_cache_'+CLIENTS[activeIdx].id; }
 function cacheRead(){ try{const v=localStorage.getItem(cacheKey());return v?JSON.parse(v):null;}catch{return null;} }
 function cacheWrite(d){ try{localStorage.setItem(cacheKey(),JSON.stringify(d));}catch{} }
 
-// ── BLOB ──
+// ── BLOB OPS ──
 async function blobRead(){
   const res=await fetch(blobUrl());
   if(res.status===404)return null;
@@ -301,30 +337,48 @@ async function blobWrite(data){
   const res=await fetch(blobUrl(),{method:'PUT',headers:{'x-ms-blob-type':'BlockBlob','Content-Type':'application/json'},body:JSON.stringify(data)});
   if(!res.ok)throw new Error('HTTP '+res.status);
 }
-function getBlob(){ return {counter:S.counter,drafts:S.drafts,logo:S.logoB64}; }
+function getBlob(){ return {counter:S.counter,reporteCounter:S.reporteCounter,drafts:S.drafts,logo:S.logoB64}; }
 
-// ── SYNC STATUS ──
+// ── SYNC ──
 function syncSt(st){
   const el=document.getElementById('sync-st'); if(!el)return;
   el.className=st;
-  el.textContent=st==='ok'?'☁ Sincronizado':st==='ing'?'↻ Guardando…':'⚠ Sin conexión (cache local)';
+  el.textContent=st==='ok'?'☁ Sincronizado':st==='ing'?'↻ Guardando…':'⚠ Sin conexión';
 }
 async function saveAll(){
   syncSt('ing');
-  try{ const d=getBlob(); await blobWrite(d); cacheWrite(d); syncSt('ok'); return true; }
-  catch(e){ console.error(e); syncSt('err'); return false; }
+  try{ await blobWrite(getBlob()); cacheWrite(getBlob()); syncSt('ok'); return true; }
+  catch(e){ syncSt('err'); return false; }
 }
 
-// ── TOAST ──
+// ── TOAST / LOADING ──
 function toast(m,e){ const t=document.getElementById('toast'); t.textContent=m; t.style.background=e?'#dc2626':'#16a34a'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2300); }
-
-// ── LOADING ──
 function showLoading(v){ const l=document.getElementById('loading'); if(v){l.classList.remove('hide');l.style.display='';}else{l.classList.add('hide');setTimeout(()=>l.style.display='none',350);} }
 
-// ── TABS (inner) ──
+// ── TABS ──
 function swTab(n){ document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.t===n)); document.querySelectorAll('.tc').forEach(c=>c.classList.toggle('on',c.dataset.t===n)); }
 
-// ── DOM ──
+// ── DOC TYPE ──
+function swDocType(dt){
+  S.docType=dt;
+  // Toggle buttons
+  document.querySelectorAll('.dtype-btn').forEach(b=>b.classList.toggle('on',b.dataset.dt===dt));
+  // Trabajos tab label
+  const tt=document.getElementById('tab-trab');
+  if(tt) tt.textContent=isCot()?'🔧 Trabajos':'📝 Reporte';
+  // Print button color
+  const bp=document.getElementById('btn-print');
+  if(bp){ bp.className='bpr '+(isCot()?'cot':'rep'); }
+  // Number field label
+  const nl=document.getElementById('num-label');
+  if(nl) nl.textContent=isCot()?'Cotización #':'Reporte #';
+  // Number field value
+  setV('f-num', isCot()?S.cot:S.rep);
+  buildContent();
+  rPreview();
+}
+
+// ── DOM HELPERS ──
 function setV(id,v){ const e=document.getElementById(id); if(e)e.value=v||''; }
 function bindF(id,k){ const e=document.getElementById(id); if(!e)return; e.addEventListener('input',ev=>{S[k]=ev.target.value;rPreview();}); }
 
@@ -345,10 +399,37 @@ function logoSVG(){
 }
 function updLogo(){ const e=document.getElementById('logo-prv'); if(!e)return; e.innerHTML=S.logoB64?`<img src="${S.logoB64}" style="max-height:46px;max-width:100%;object-fit:contain"><br><span style="font-size:9px;color:#6b7280">Clic para cambiar</span>`:'🏭&nbsp; Clic para subir logo'; }
 
-// ── ITEMS EDITOR ──
-function buildItems(){
+// ── CONTENT EDITOR (Trabajos o Reporte) ──
+function buildContent(){
   const c=document.getElementById('items-ed'); if(!c)return;
-  let h=`<div class="ihead"><span></span><div class="ihl">Descripción</div><div class="ihl">Cant.</div><div class="ihl">P. Unit.</div><div class="ihl">Subtotal</div><div class="ihl"></div></div>`;
+
+  if(!isCot()){
+    // ── Reporte de Daños editor ──
+    c.innerHTML=`
+      <div class="fg">
+        <div class="fl">Título / Asunto</div>
+        <input class="fi" id="rep-titulo" value="${esc(S.reporteTitulo)}" placeholder="Ej: Transmisión Fotón Gen 1 sincronizada">
+      </div>
+      <div class="fg">
+        <div class="fl">Descripción del reporte</div>
+        <textarea class="rep-ta" id="rep-texto" placeholder="Describe el daño encontrado, causas, observaciones y recomendaciones…">${esc(S.reporteTexto)}</textarea>
+        <div class="rep-info" id="rep-chars">0 caracteres</div>
+      </div>`;
+
+    const ti=document.getElementById('rep-titulo');
+    const tx=document.getElementById('rep-texto');
+    const ch=document.getElementById('rep-chars');
+
+    const updChars=()=>{ if(ch) ch.textContent=tx.value.length+' caracteres'; };
+    updChars();
+
+    ti.addEventListener('input',e=>{ S.reporteTitulo=e.target.value; rPreview(); });
+    tx.addEventListener('input',e=>{ S.reporteTexto=e.target.value; updChars(); rPreview(); });
+    return;
+  }
+
+  // ── Cotización items editor ──
+  let h=`<div class="ihead"><span></span><div class="ihl">Descripción</div><div class="ihl">Cant.</div><div class="ihl">P. Unit.</div><div class="ihl">Sub.</div><div class="ihl"></div></div>`;
   S.rows.forEach((r,i)=>{
     const sub=rSub(r);
     h+=`<div class="irow"><span class="inum">${i+1}</span>
@@ -361,7 +442,7 @@ function buildItems(){
   });
   const gt=gTotal();
   h+=`<button class="add-btn" id="add-row">+ Agregar renglón</button>
-  <div class="tbar"><span class="tbar-l">Total cotización</span><span class="tbar-v" id="ed-tot">${gt>0?fmt(gt):'—'}</span></div>`;
+  <div class="tbar"><span class="tbar-l">Total</span><span class="tbar-v" id="ed-tot">${gt>0?fmt(gt):'—'}</span></div>`;
   c.innerHTML=h;
 
   c.querySelectorAll('input[data-f]').forEach(inp=>{
@@ -373,27 +454,47 @@ function buildItems(){
       rPreview();
     });
   });
-  c.querySelectorAll('.irem').forEach(btn=>{
-    btn.addEventListener('click',ev=>{ const i=parseInt(ev.target.dataset.ri); if(S.rows.length<=1){toast('Mínimo 1 renglón',true);return;} S.rows.splice(i,1);buildItems();rPreview(); });
-  });
+  c.querySelectorAll('.irem').forEach(btn=>btn.addEventListener('click',ev=>{
+    const i=parseInt(ev.target.dataset.ri); if(S.rows.length<=1){toast('Mínimo 1 renglón',true);return;}
+    S.rows.splice(i,1);buildContent();rPreview();
+  }));
   const addBtn=document.getElementById('add-row');
-  if(addBtn) addBtn.addEventListener('click',()=>{ S.rows.push(eRow());buildItems();rPreview(); const tc=c.closest('.tc');if(tc)tc.scrollTop=tc.scrollHeight; });
+  if(addBtn) addBtn.addEventListener('click',()=>{ S.rows.push(eRow());buildContent();rPreview(); const tc=c.closest('.tc');if(tc)tc.scrollTop=tc.scrollHeight; });
 }
 
 // ── PREVIEW ──
 function rPreview(){
   const pvw=document.getElementById('pvw'); if(!pvw)return;
-  const gt=gTotal();
   const logoEl=S.logoB64?`<img src="${S.logoB64}" style="max-width:141px;max-height:107px;object-fit:contain">`:logoSVG();
-  let rows='';
-  S.rows.forEach((r,i)=>{
-    const sub=rSub(r);
-    rows+=`<tr><td class="r" style="color:#bbb;font-size:8px">${r.d?i+1:''}</td><td>${esc(r.d)}&nbsp;</td><td class="r">${r.q||''}</td><td class="r">${r.p&&pn(r.p)>0?fmt(pn(r.p)):''}</td><td class="r">${sub>0?fmt(sub):''}</td></tr>`;
-  });
-  if(gt>0) rows+=`<tr class="trow"><td colspan="4" class="r" style="border-right:1px solid #333">TOTAL:</td><td class="r">${fmt(gt)}</td></tr>`;
+  const numLabel = isCot()?'COTIZACIÓN':'REPORTE';
+  const numVal   = isCot()?S.cot:S.rep;
 
+  let body='';
+  if(isCot()){
+    // Tabla de cotización
+    const gt=gTotal();
+    let rows='';
+    S.rows.forEach((r,i)=>{
+      const sub=rSub(r);
+      rows+=`<tr><td class="r" style="color:#bbb;font-size:8px">${r.d?i+1:''}</td><td>${esc(r.d)}&nbsp;</td><td class="r">${r.q||''}</td><td class="r">${r.p&&pn(r.p)>0?fmt(pn(r.p)):''}</td><td class="r">${sub>0?fmt(sub):''}</td></tr>`;
+    });
+    if(gt>0) rows+=`<tr class="trow"><td colspan="4" class="r" style="border-right:1px solid #333">TOTAL:</td><td class="r">${fmt(gt)}</td></tr>`;
+    body=`<table class="dtbl">
+      <colgroup><col style="width:26px"><col><col style="width:46px"><col style="width:78px"><col style="width:82px"></colgroup>
+      <thead><tr><th class="r">#</th><th>Descripción del trabajo</th><th class="r">Cant.</th><th class="r">P. Unitario</th><th class="r">Importe</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  } else {
+    // Cuerpo del reporte de daños
+    body=`
+      ${S.reporteTitulo?`<div class="rep-titulo-doc">${esc(S.reporteTitulo)}</div>`:''}
+      <div class="rep-body-doc">${esc(S.reporteTexto).replace(/\n/g,'<br>')}</div>`;
+  }
+
+  const gt=isCot()?gTotal():0;
   pvw.innerHTML=`<div class="doc">
-    <div class="dhead"><div class="dlogw">${logoEl}</div>
+    <div class="dhead">
+      <div class="dlogw">${logoEl}</div>
       <div class="dtitle"><div class="dt1">TALLER DE SERVICIO Y SOLDADURA</div><div class="dt2">BOBADILLA</div><div class="dt3">MECÁNICA Y TODO TIPO DE SOLDADURA</div></div>
       <div style="width:141px"></div>
     </div>
@@ -402,14 +503,10 @@ function rPreview(){
       <div class="dcell">CLIENTE:&nbsp;<span class="dval">${esc(S.cli)}</span></div>
       <div class="dcell">&nbsp;</div>
       <div class="dcell">PROVEEDOR:&nbsp;<span class="dval">${esc(S.prov)}</span></div>
-      <div class="dcell">COTIZACIÓN:&nbsp;<span class="dval">${esc(S.cot)}</span></div>
+      <div class="dcell">${numLabel}:&nbsp;<span class="dval">${esc(numVal)}</span></div>
     </div>
     <div class="dloc">${S.ubi?S.ubi.toUpperCase()+':':'UBICACIÓN:'}</div>
-    <table class="dtbl">
-      <colgroup><col style="width:26px"><col><col style="width:46px"><col style="width:78px"><col style="width:82px"></colgroup>
-      <thead><tr><th class="r">#</th><th>Descripción del trabajo</th><th class="r">Cant.</th><th class="r">P. Unitario</th><th class="r">Importe</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
+    ${body}
     <div class="dftr">
       <div class="dft-ot"><strong>O. T.</strong>&nbsp;&nbsp;${esc(S.ot)}</div>
       <div class="dft-cr"><strong>CR -</strong>&nbsp;&nbsp;${esc(S.cr)}</div>
@@ -423,12 +520,15 @@ function rPreview(){
 // ── BORRADORES ──
 function rDrafts(){
   const c=document.getElementById('draft-list'); if(!c)return;
-  if(!S.drafts.length){c.innerHTML='<div class="no-d">No hay borradores guardados</div>';return;}
-  c.innerHTML=S.drafts.map(d=>`
-    <div class="ditem" data-id="${d.id}">
-      <div><div class="dname">${esc(d.name)}</div><div class="ddate">${d.date}</div></div>
+  if(!S.drafts.length){c.innerHTML='<div class="no-d">No hay documentos guardados</div>';return;}
+  c.innerHTML=S.drafts.map(d=>{
+    const isc=!d.data||d.data.docType!=='reporte';
+    const badge=isc?'<span class="dtype-badge cot">COT</span>':'<span class="dtype-badge rep">REP</span>';
+    return `<div class="ditem" data-id="${d.id}">
+      <div><div class="dname">${esc(d.name)}${badge}</div><div class="ddate">${d.date}</div></div>
       <span class="ddel" data-id="${d.id}">×</span>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   c.querySelectorAll('.ditem').forEach(el=>{
     el.addEventListener('click',()=>loadDraft(S.drafts.find(d=>d.id===el.dataset.id)));
     el.querySelector('.ddel').addEventListener('click',e=>{e.stopPropagation();delDraft(el.dataset.id);});
@@ -436,78 +536,101 @@ function rDrafts(){
 }
 
 async function saveDraft(){
-  const name=`COT-${S.cot}${S.cli?' — '+S.cli:''}`;
+  const prefix=isCot()?'COT':'REP';
+  const num=isCot()?S.cot:S.rep;
+  const name=`${prefix}-${num}${S.cli?' — '+S.cli:''}`;
   const now=new Date();
   const date=now.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
   S.drafts.unshift({id:'d'+Date.now(),name,date,data:JSON.parse(JSON.stringify({...S,logoB64:null,drafts:[]}))});
   if(S.drafts.length>50)S.drafts=S.drafts.slice(0,50);
   rDrafts();
   const ok=await saveAll();
-  toast(ok?'✓ Borrador guardado':'✓ Guardado (sin conexión)',!ok);
+  toast(ok?`✓ ${isCot()?'Cotización':'Reporte'} guardado en la nube`:`✓ Guardado (sin conexión)`,!ok);
 }
 
 function loadDraft(d){
   if(!d)return;
   const x=d.data;
-  Object.assign(S,{fecha:x.fecha||todayS(),cot:x.cot||'0001',cli:x.cli||'',prov:x.prov||'',ubi:x.ubi||'',ot:x.ot||'',cr:x.cr||'',rows:x.rows||initRows(15)});
-  updateFormFields();buildItems();rPreview();swTab('datos');toast('✓ Cotización cargada');
+  Object.assign(S,{
+    docType:x.docType||'cotizacion',
+    fecha:x.fecha||todayS(), cot:x.cot||'0001', cli:x.cli||'',
+    prov:x.prov||'', ubi:x.ubi||'', ot:x.ot||'', cr:x.cr||'',
+    rows:x.rows||initRows(15),
+    rep:x.rep||'0001', reporteTitulo:x.reporteTitulo||'', reporteTexto:x.reporteTexto||''
+  });
+  updateFormFields();buildContent();rPreview();swTab('datos');toast('✓ Documento cargado');
 }
 
 async function delDraft(id){
   S.drafts=S.drafts.filter(d=>d.id!==id);
-  rDrafts();await saveAll();toast('Borrador eliminado');
+  rDrafts();await saveAll();toast('Documento eliminado');
 }
 
-// ── NUEVA COTIZACIÓN ──
-async function newQuote(){
-  S.counter++;
-  const nc=String(S.counter).padStart(4,'0');
-  S.fecha=todayS();S.cot=nc;S.cli='';S.prov='';S.ubi='';S.ot='';S.cr='';S.rows=initRows(15);
-  updateFormFields();buildItems();rPreview();swTab('datos');
+// ── NUEVO ──
+async function newDoc(){
+  if(isCot()){
+    S.counter++;
+    S.cot=String(S.counter).padStart(4,'0');
+    S.rows=initRows(15);
+  } else {
+    S.reporteCounter++;
+    S.rep=String(S.reporteCounter).padStart(4,'0');
+    S.reporteTitulo=''; S.reporteTexto='';
+  }
+  S.fecha=todayS(); S.cli=''; S.prov=''; S.ubi=''; S.ot=''; S.cr='';
+  updateFormFields();buildContent();rPreview();swTab('datos');
   await saveAll();
-  toast(`✓ Nueva cotización #${nc}`);
+  toast(`✓ Nuevo ${isCot()?'COT':'REP'}-${isCot()?S.cot:S.rep}`);
 }
 
-// ── UPDATE FORM FIELDS ──
+// ── UPDATE FIELDS ──
 function updateFormFields(){
-  setV('f-fecha',S.fecha);setV('f-cot',S.cot);setV('f-cli',S.cli);
-  setV('f-prov',S.prov);setV('f-ubi',S.ubi);setV('f-ot',S.ot);setV('f-cr',S.cr);
+  setV('f-fecha',S.fecha);
+  setV('f-num', isCot()?S.cot:S.rep);
+  setV('f-cli',S.cli); setV('f-prov',S.prov); setV('f-ubi',S.ubi);
+  setV('f-ot',S.ot); setV('f-cr',S.cr);
+  // Sync toggle + labels
+  document.querySelectorAll('.dtype-btn').forEach(b=>b.classList.toggle('on',b.dataset.dt===S.docType));
+  const tt=document.getElementById('tab-trab');
+  if(tt) tt.textContent=isCot()?'🔧 Trabajos':'📝 Reporte';
+  const nl=document.getElementById('num-label');
+  if(nl) nl.textContent=isCot()?'Cotización #':'Reporte #';
+  const bp=document.getElementById('btn-print');
+  if(bp) bp.className='bpr '+(isCot()?'cot':'rep');
 }
 
-// ── LOAD CLIENT FROM BLOB ──
+// ── LOAD FROM BLOB ──
 async function loadClientFromBlob(){
   let loaded=false;
   try{
     const data=await blobRead();
     if(data){
       S.counter=data.counter||1;
+      S.reporteCounter=data.reporteCounter||1;
       S.drafts=data.drafts||[];
       S.logoB64=data.logo||null;
-      cacheWrite(data);
-      loaded=true;
+      cacheWrite(data); loaded=true;
     }
-  }catch(e){ console.warn('Blob no disponible:',e); }
-
+  }catch(e){ console.warn(e); }
   if(!loaded){
     const cache=cacheRead();
-    if(cache){ S.counter=cache.counter||1; S.drafts=cache.drafts||[]; S.logoB64=cache.logo||null; }
+    if(cache){ S.counter=cache.counter||1; S.reporteCounter=cache.reporteCounter||1; S.drafts=cache.drafts||[]; S.logoB64=cache.logo||null; }
     syncSt('err');
   } else { syncSt('ok'); }
-
   S.cot=String(S.counter).padStart(4,'0');
+  S.rep=String(S.reporteCounter).padStart(4,'0');
 }
 
 // ── SWITCH CLIENT ──
 async function switchClient(idx){
   if(idx===activeIdx)return;
   showLoading(true);
-  await saveAll(); // guarda cliente actual
+  await saveAll();
   activeIdx=idx;
   S=freshState();
   await loadClientFromBlob();
   updateFormFields();
-  updLogo();buildItems();rPreview();rDrafts();
-  // Actualizar UI del client bar
+  updLogo();buildContent();rPreview();rDrafts();
   document.querySelectorAll('.ctab').forEach(t=>t.classList.toggle('on',parseInt(t.dataset.c)===idx));
   document.getElementById('ed-client-name').textContent='✦ '+CLIENTS[idx].label;
   showLoading(false);
@@ -520,32 +643,57 @@ async function init(){
   await loadClientFromBlob();
   updateFormFields();
 
-  ['fecha','cot','cli','prov','ubi','ot','cr'].forEach(k=>bindF('f-'+k,k));
+  // Bind shared fields
+  ['fecha','cli','prov','ubi','ot','cr'].forEach(k=>bindF('f-'+k,k));
 
+  // Número de documento (COT o REP)
+  document.getElementById('f-num').addEventListener('input',ev=>{
+    if(isCot()) S.cot=ev.target.value;
+    else         S.rep=ev.target.value;
+    rPreview();
+  });
+
+  // Ajustar contador
+  document.getElementById('btn-num-rst').addEventListener('click',()=>{
+    const cur=isCot()?S.counter:S.reporteCounter;
+    const val=prompt(`Ajustar contador de ${isCot()?'cotizaciones':'reportes'}:`,cur);
+    if(val===null)return;
+    const n=parseInt(val); if(isNaN(n)||n<0){toast('Número inválido',true);return;}
+    if(isCot()){ S.counter=n; S.cot=String(n).padStart(4,'0'); }
+    else        { S.reporteCounter=n; S.rep=String(n).padStart(4,'0'); }
+    setV('f-num',isCot()?S.cot:S.rep);
+    rPreview();
+    saveAll().then(ok=>toast(ok?'✓ Contador ajustado':'✓ Ajustado (sin conexión)',!ok));
+  });
+
+  // Logo
   document.getElementById('logo-inp').addEventListener('change',e=>{
     const f=e.target.files[0]; if(!f)return;
     if(f.size>4e6){toast('Logo muy grande (máx 4 MB)',true);return;}
     const reader=new FileReader();
-    reader.onload=async ev=>{ S.logoB64=ev.target.result;updLogo();rPreview();const ok=await saveAll();toast(ok?'✓ Logo guardado':'✓ Logo cargado (sin conexión)',!ok); };
+    reader.onload=async ev=>{ S.logoB64=ev.target.result;updLogo();rPreview();const ok=await saveAll();toast(ok?'✓ Logo guardado':'✓ Logo cargado',!ok); };
     reader.readAsDataURL(f);
   });
 
-  document.getElementById('btn-cot-rst').addEventListener('click',()=>{
-    const val=prompt('Ajustar numeración — nuevo valor del contador:',S.counter);
-    if(val===null)return;
-    const n=parseInt(val); if(isNaN(n)||n<0){toast('Número inválido',true);return;}
-    S.counter=n;S.cot=String(n).padStart(4,'0');setV('f-cot',S.cot);rPreview();
-    saveAll().then(ok=>toast(ok?`✓ Contador ajustado a ${S.cot}`:'✓ Ajustado (sin conexión)',!ok));
-  });
+  // Tipo de documento
+  document.querySelectorAll('.dtype-btn').forEach(b=>b.addEventListener('click',()=>swDocType(b.dataset.dt)));
 
+  // Tabs
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>swTab(t.dataset.t)));
-  document.querySelectorAll('.ctab').forEach(t=>t.addEventListener('click',()=>switchClient(parseInt(t.dataset.c))));
-  document.getElementById('btn-save').addEventListener('click',saveDraft);
-  document.getElementById('btn-del-all').addEventListener('click',async()=>{ if(!confirm('¿Eliminar todos los borradores de '+CLIENTS[activeIdx].label+'?'))return; S.drafts=[];rDrafts();await saveAll();toast('Borradores eliminados'); });
-  document.getElementById('btn-new').addEventListener('click',newQuote);
-  document.getElementById('btn-logout').addEventListener('click',()=>{ sessionStorage.removeItem('bob_auth'); window.location.replace('../'); });
 
-  updLogo();buildItems();rPreview();rDrafts();
+  // Client tabs
+  document.querySelectorAll('.ctab').forEach(t=>t.addEventListener('click',()=>switchClient(parseInt(t.dataset.c))));
+
+  // Acciones
+  document.getElementById('btn-save').addEventListener('click',saveDraft);
+  document.getElementById('btn-del-all').addEventListener('click',async()=>{
+    if(!confirm('¿Eliminar todos los documentos de '+CLIENTS[activeIdx].label+'?'))return;
+    S.drafts=[];rDrafts();await saveAll();toast('Documentos eliminados');
+  });
+  document.getElementById('btn-new').addEventListener('click',newDoc);
+  document.getElementById('btn-logout').addEventListener('click',()=>{ sessionStorage.removeItem('bob_auth');window.location.replace('../'); });
+
+  updLogo();buildContent();rPreview();rDrafts();
   showLoading(false);
 }
 
