@@ -185,8 +185,8 @@ html,body{height:100%;overflow:hidden}
     <div class="client-tabs">
       <div class="ctab c0 on" data-c="0">CEMEX</div>
       <div class="ctab c1"    data-c="1">HOLCIM</div>
-      <div class="ctab c2"    data-c="2">CEMEX 2</div>
-      <div class="ctab c3"    data-c="3">CEMEX 3</div>
+      <div class="ctab c2"    data-c="2">C. ESPAÑOLES</div>
+      <div class="ctab c3"    data-c="3">HOLCIM ES</div>
     </div>
     <div class="cb-right">
       <a href="../" class="cb-back">← Inicio</a>
@@ -237,7 +237,7 @@ html,body{height:100%;overflow:hidden}
         <div class="sec">Datos internos</div>
         <div class="g2">
           <div class="fg"><div class="fl">O.T.</div><input class="fi" id="f-ot"></div>
-          <div class="fg"><div class="fl">CR</div><input class="fi" id="f-cr"></div>
+          <div class="fg"><div class="fl" id="cr-label">CR</div><input class="fi" id="f-cr"></div>
         </div>
       </div>
 
@@ -278,10 +278,10 @@ if (!sessionStorage.getItem('bob_auth')) window.location.replace('../');
 
 // ── CLIENTES ──
 const CLIENTS = [
-  {id:'cemex',  label:'CEMEX'},
-  {id:'holcim', label:'HOLCIM'},
-  {id:'cemex2', label:'CEMEX 2'},
-  {id:'cemex3', label:'CEMEX 3'},
+  {id:'cemex',   label:'CEMEX',              tab:'CEMEX',        crLabel:'CR'},
+  {id:'holcim',  label:'HOLCIM',             tab:'HOLCIM',       crLabel:'RE'},
+  {id:'cemex2',  label:'Cementos Españoles', tab:'C. ESPAÑOLES', crLabel:'BP'},
+  {id:'cemex3',  label:'Holcim ES',          tab:'HOLCIM ES',    crLabel:'RE'},
 ];
 
 // ── BLOB ──
@@ -509,7 +509,7 @@ function rPreview(){
     ${body}
     <div class="dftr">
       <div class="dft-ot"><strong>O. T.</strong>&nbsp;&nbsp;${esc(S.ot)}</div>
-      <div class="dft-cr"><strong>CR -</strong>&nbsp;&nbsp;${esc(S.cr)}</div>
+      <div class="dft-cr"><strong>${CLIENTS[activeIdx].crLabel} -</strong>&nbsp;&nbsp;${esc(S.cr)}</div>
       <div class="dft-tot">TOTAL:&nbsp;<span style="font-size:12px">${gt>0?fmt(gt):''}</span></div>
     </div>
     <div class="dsigs"><div class="dsig">FIRMA</div><div class="dsig">FIRMA</div><div class="dsig">FIRMA</div></div>
@@ -584,11 +584,16 @@ async function newDoc(){
 }
 
 // ── UPDATE FIELDS ──
+function updateCrLabel(){
+  const el=document.getElementById('cr-label');
+  if(el) el.textContent=CLIENTS[activeIdx].crLabel;
+}
 function updateFormFields(){
   setV('f-fecha',S.fecha);
   setV('f-num', isCot()?S.cot:S.rep);
   setV('f-cli',S.cli); setV('f-prov',S.prov); setV('f-ubi',S.ubi);
   setV('f-ot',S.ot); setV('f-cr',S.cr);
+  updateCrLabel();
   // Sync toggle + labels
   document.querySelectorAll('.dtype-btn').forEach(b=>b.classList.toggle('on',b.dataset.dt===S.docType));
   const tt=document.getElementById('tab-trab');
@@ -633,6 +638,7 @@ async function switchClient(idx){
   updLogo();buildContent();rPreview();rDrafts();
   document.querySelectorAll('.ctab').forEach(t=>t.classList.toggle('on',parseInt(t.dataset.c)===idx));
   document.getElementById('ed-client-name').textContent='✦ '+CLIENTS[idx].label;
+  updateCrLabel();
   showLoading(false);
 }
 
