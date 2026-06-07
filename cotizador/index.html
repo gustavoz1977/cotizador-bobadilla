@@ -11,18 +11,19 @@ html,body{height:100%;overflow:hidden}
 #app{display:flex;flex-direction:column;height:100vh;font-family:'Barlow',Arial,sans-serif}
 
 /* ── CLIENT BAR ── */
-#client-bar{display:flex;align-items:center;background:#060d18;border-bottom:2px solid #0f1828;height:48px;flex-shrink:0;padding:0 14px;gap:12px;z-index:10}
+#client-bar{display:flex;align-items:center;background:#060d18;border-bottom:2px solid #0f1828;height:48px;flex-shrink:0;padding:0 14px;gap:10px;z-index:10}
 .cb-brand{font-size:11px;font-weight:700;letter-spacing:2px;color:#f97316;text-transform:uppercase;white-space:nowrap}
 .cb-sep{width:1px;height:24px;background:#1e2d45;flex-shrink:0}
-.client-tabs{display:flex;gap:3px;flex:1}
-.ctab{padding:6px 18px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:3px;color:#5a6a82;transition:background .2s,color .2s;border:1px solid transparent}
+.client-tabs{display:flex;gap:2px;flex:1;overflow:hidden}
+.ctab{padding:6px 14px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;color:#5a6a82;transition:background .2s,color .2s;border:1px solid transparent;white-space:nowrap}
 .ctab:hover{color:#d1d5db;background:#111827}
 .ctab.on{color:#fff;background:#1e2d45;border-color:#2d4060}
 .ctab.on.c0{border-left:3px solid #e31837}
 .ctab.on.c1{border-left:3px solid #005f9e}
 .ctab.on.c2{border-left:3px solid #e8860a}
 .ctab.on.c3{border-left:3px solid #16a34a}
-.cb-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+.ctab.on.c4{border-left:3px solid #7c3d1e}
+.cb-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
 .cb-back{font-size:10px;color:#5a6a82;text-decoration:none;letter-spacing:1px;transition:color .2s}
 .cb-back:hover{color:#f97316}
 .cb-logout{background:transparent;border:1px solid #1e2d45;border-radius:3px;color:#5a6a82;padding:4px 10px;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .2s;font-family:inherit;text-transform:uppercase}
@@ -46,13 +47,6 @@ html,body{height:100%;overflow:hidden}
 .tc{display:none;flex:1;overflow-y:auto;padding:10px 14px}
 .tc.on{display:block}
 
-/* Doc type toggle */
-.dtype-wrap{display:flex;gap:3px;background:#0a1020;border-radius:4px;padding:3px;margin-bottom:12px}
-.dtype-btn{flex:1;padding:7px 8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;border:none;background:transparent;color:#4b5563;font-family:inherit;transition:all .2s}
-.dtype-btn:hover:not(.on){color:#9ca3af;background:#1f2937}
-.dtype-btn.on.cot{background:#f97316;color:#fff}
-.dtype-btn.on.rep{background:#3b82f6;color:#fff}
-
 /* Campos */
 .fg{margin-bottom:9px}
 .fl{font-size:9px;letter-spacing:1.2px;color:#4b5563;text-transform:uppercase;margin-bottom:3px}
@@ -68,8 +62,14 @@ html,body{height:100%;overflow:hidden}
 .cot-btn{background:#1f2937;border:1px solid #374151;border-radius:3px;color:#9ca3af;padding:5px 9px;font-size:12px;cursor:pointer}
 .cot-btn:hover{border-color:#f97316;color:#f97316}
 .sec{font-size:9px;letter-spacing:1.2px;color:#4b5563;text-transform:uppercase;margin:6px 0 5px;border-top:1px solid #1f2937;padding-top:8px}
+/* Doc type toggle */
+.dtype-wrap{display:flex;gap:3px;background:#0a1020;border-radius:4px;padding:3px;margin-bottom:12px}
+.dtype-btn{flex:1;padding:7px 8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:3px;border:none;background:transparent;color:#4b5563;font-family:inherit;transition:all .2s}
+.dtype-btn:hover:not(.on){color:#9ca3af;background:#1f2937}
+.dtype-btn.on.cot{background:#f97316;color:#fff}
+.dtype-btn.on.rep{background:#3b82f6;color:#fff}
 
-/* Items */
+/* Items cotización */
 .ihead{display:grid;grid-template-columns:15px 1fr 48px 68px 68px 20px;gap:3px;margin-bottom:3px}
 .ihl{font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:#374151;text-align:center}
 .ihl:nth-child(2){text-align:left}
@@ -86,11 +86,16 @@ html,body{height:100%;overflow:hidden}
 .tbar-v{font-size:16px;font-weight:700;color:#f97316}
 .add-btn{width:100%;background:transparent;border:1px dashed #374151;border-radius:3px;color:#4b5563;padding:5px;font-size:11px;cursor:pointer;margin-top:4px}
 .add-btn:hover{border-color:#f97316;color:#f97316}
-
-/* Reporte editor */
-.rep-ta{width:100%;background:#1f2937;border:1px solid #374151;border-radius:3px;color:#d1d5db;padding:7px 9px;font-size:12px;outline:none;font-family:'Barlow',Arial,sans-serif;resize:none;line-height:1.6;min-height:320px}
+/* Reporte / Maderera textareas */
+.rep-ta{width:100%;background:#1f2937;border:1px solid #374151;border-radius:3px;color:#d1d5db;padding:7px 9px;font-size:12px;outline:none;font-family:'Barlow',Arial,sans-serif;resize:none;line-height:1.6;min-height:100px}
 .rep-ta:focus{border-color:#3b82f6}
+.rep-ta.mad{min-height:80px}
+.rep-ta.mad:focus{border-color:#7c3d1e}
 .rep-info{font-size:9px;color:#374151;text-align:right;margin-top:3px}
+/* Maderera item in editor */
+.mad-item-block{background:#1a2338;border:1px solid #252f44;border-radius:4px;padding:10px;margin-bottom:8px}
+.mad-item-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.mad-item-lbl{font-size:9px;font-weight:700;letter-spacing:1px;color:#f97316;text-transform:uppercase}
 
 /* Borradores */
 .dbrow{display:flex;gap:5px;margin-bottom:5px}
@@ -105,6 +110,7 @@ html,body{height:100%;overflow:hidden}
 .dtype-badge{font-size:8px;padding:1px 5px;border-radius:2px;font-weight:700;margin-left:5px}
 .dtype-badge.cot{background:rgba(249,115,22,.15);color:#f97316}
 .dtype-badge.rep{background:rgba(59,130,246,.15);color:#3b82f6}
+.dtype-badge.mad{background:rgba(124,61,30,.2);color:#c07040}
 .ddel{font-size:16px;color:#374151;cursor:pointer;padding:0 3px;line-height:1}
 .ddel:hover{color:#ef4444}
 .no-d{font-size:11px;color:#374151;text-align:center;padding:12px 0}
@@ -112,18 +118,15 @@ html,body{height:100%;overflow:hidden}
 /* Acciones */
 #ed-foot{padding:10px 14px;border-top:1px solid #1f2937;display:flex;gap:6px;flex-shrink:0}
 .bpr{flex:1;color:#fff;border:none;border-radius:4px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.8px;font-family:inherit;transition:background .2s}
-.bpr.cot{background:#f97316}
-.bpr.cot:hover{background:#e06010}
-.bpr.rep{background:#3b82f6}
-.bpr.rep:hover{background:#2563eb}
+.bpr.cot{background:#f97316}.bpr.cot:hover{background:#e06010}
+.bpr.rep{background:#3b82f6}.bpr.rep:hover{background:#2563eb}
+.bpr.mad{background:#7c3d1e}.bpr.mad:hover{background:#5c2d14}
 .bnw{background:#1f2937;color:#9ca3af;border:1px solid #374151;border-radius:4px;padding:9px 12px;font-size:12px;cursor:pointer;font-family:inherit}
 .bnw:hover{color:#d1d5db;background:#374151}
 
-/* Toast */
+/* Toast / Loading */
 #toast{position:fixed;bottom:12px;right:12px;color:#fff;padding:7px 14px;border-radius:4px;font-size:12px;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999}
 #toast.show{opacity:1}
-
-/* Loading */
 #loading{position:fixed;inset:0;background:rgba(8,14,26,.85);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100;flex-direction:column;gap:10px;transition:opacity .3s}
 #loading.hide{opacity:0;pointer-events:none}
 .ld-spin{width:28px;height:28px;border:3px solid #1f2937;border-top-color:#f97316;border-radius:50%;animation:spin .8s linear infinite}
@@ -132,6 +135,8 @@ html,body{height:100%;overflow:hidden}
 
 /* ── PREVIEW ── */
 #pvw{flex:1;background:#888;overflow:auto;padding:20px;display:flex;flex-direction:column;align-items:center}
+
+/* Documento Bobadilla */
 .doc{background:#fff;width:680px;min-width:680px;min-height:960px;padding:14px 20px;box-shadow:0 3px 18px rgba(0,0,0,.3);font-family:Arial,sans-serif}
 .dhead{display:flex;align-items:center;margin-bottom:6px}
 .dlogw{width:141px;min-width:141px;min-height:107px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -147,16 +152,13 @@ html,body{height:100%;overflow:hidden}
 .dcell{padding:2px 4px;border-right:1px solid #333;font-size:9px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .dcell:last-child{border-right:none}
 .dloc{border:1px solid #333;border-top:none;padding:2px 4px;font-weight:700;font-size:9px;margin-bottom:3px}
-/* Cotización table */
 .dtbl{width:100%;border-collapse:collapse;margin-bottom:3px;font-size:9px;table-layout:fixed}
 .dtbl th{background:#f0f0f0;border:1px solid #555;padding:2px 4px;font-size:8px;text-transform:uppercase;text-align:left}
 .dtbl th.r,.dtbl td.r{text-align:right}
 .dtbl td{border:1px solid #ddd;padding:2px 4px;min-height:18px}
 .trow td{border-top:2px solid #333;background:#f5f5f5;font-weight:700;font-size:10px}
-/* Reporte body */
 .rep-titulo-doc{border:1px solid #333;border-bottom:none;padding:4px 6px;font-size:10px;font-weight:700}
 .rep-body-doc{border:1px solid #333;padding:8px 10px;font-size:10px;line-height:1.8;min-height:500px;white-space:pre-wrap;word-wrap:break-word;margin-bottom:3px}
-/* Footer */
 .dftr{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #333;margin-bottom:3px}
 .dft-ot{padding:3px 6px;border-right:1px solid #333;font-size:10px}
 .dft-cr{padding:3px 6px;border-right:1px solid #333;font-size:10px}
@@ -165,20 +167,56 @@ html,body{height:100%;overflow:hidden}
 .dsig{text-align:center;border-top:1px solid #333;padding-top:3px;font-size:9px;color:#555}
 .dcontact{text-align:center;font-size:10px;font-weight:700;margin-top:7px;padding-top:5px;border-top:1px solid #eee}
 
+/* Documento Maderera */
+.mad-doc{background:#fff;width:680px;min-width:680px;min-height:900px;padding:40px 48px 0;box-shadow:0 3px 18px rgba(0,0,0,.3);font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.6;color:#1a1a1a}
+.mad-logo-area{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.mad-logo-name{font-family:Georgia,serif;font-size:26px;letter-spacing:3px;color:#1a1a1a;font-weight:400}
+.mad-date{margin-bottom:24px;font-size:13px}
+.mad-recipient{margin-bottom:20px;font-size:13px;line-height:1.5}
+.mad-saludo{margin-bottom:16px;font-size:13px}
+.mad-intro{margin-bottom:24px;font-size:13px;line-height:1.7}
+.mad-item{display:flex;gap:20px;margin-bottom:20px;align-items:flex-end}
+.mad-item-left{flex:1;min-width:0}
+.mad-item-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.mad-item-desc{font-size:13px;line-height:1.65}
+.mad-item-price{min-width:80px;text-align:right;font-size:13px;flex-shrink:0;padding-bottom:1px}
+.mad-closing{margin:20px 0;font-size:13px;line-height:1.7}
+.mad-closing p{margin-bottom:10px}
+.mad-firma-area{margin:28px 0 16px;font-size:13px}
+.mad-firma-word{letter-spacing:4px;font-size:12px;margin-bottom:12px}
+.mad-firma-script{font-family:cursive;font-size:22px;margin:8px 0;color:#1a1a1a;opacity:.7}
+.mad-firma-line{width:160px;border-top:1px solid #1a1a1a;margin:20px 0 6px}
+.mad-firma-nombre{font-size:13px;font-weight:700}
+.mad-bank-box{float:right;border:1px solid #888;padding:12px 14px;font-size:10px;line-height:1.6;margin-top:-90px;width:210px;font-family:Georgia,serif}
+.mad-bank-title{font-weight:700;font-size:10px;margin-bottom:6px}
+.mad-bank-row{display:flex;gap:4px;font-size:10px;flex-wrap:wrap}
+.mad-bank-label{font-weight:700}
+.mad-precios-note{font-size:11px;clear:both;margin:16px 0 0;font-style:italic;font-family:Georgia,serif}
+.mad-footer{background:#5c2d14;color:#e8d5c4;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;margin:20px -48px 0;font-size:11px;gap:20px;font-family:Georgia,serif}
+.mad-footer-left{display:flex;flex-direction:column;gap:5px}
+.mad-footer-item{display:flex;align-items:center;gap:7px;opacity:.9}
+.mad-footer-right{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.mad-footer-brand{font-family:Georgia,serif;font-size:14px;letter-spacing:2px;color:#e8d5c4}
+
 @media print{
   @page{size:letter portrait;margin:12mm}
   html,body,#app{height:auto;overflow:visible;display:block}
   #client-bar,#editor,#loading{display:none!important}
   #main{display:block}
   #pvw{padding:0;background:none;overflow:visible;display:block}
-  .doc{box-shadow:none;width:100%;min-width:unset;min-height:unset;padding:0}
+  .doc,.mad-doc{box-shadow:none;width:100%;min-width:unset;min-height:unset}
+  .doc{padding:0}
+  .mad-doc{padding:8mm 12mm 0}
+  .mad-footer{margin:20px -48px 0}
   .dftr,.dsigs,.dcontact{page-break-inside:avoid}
+  .mad-firma-area,.mad-bank-box,.mad-footer{page-break-inside:avoid}
 }
 </style>
 </head>
 <body>
 
 <div id="app">
+  <!-- CLIENT BAR -->
   <div id="client-bar">
     <div class="cb-brand">Bobadilla</div>
     <div class="cb-sep"></div>
@@ -187,6 +225,7 @@ html,body{height:100%;overflow:hidden}
       <div class="ctab c1"    data-c="1">HOLCIM</div>
       <div class="ctab c2"    data-c="2">C. ESPAÑOLES</div>
       <div class="ctab c3"    data-c="3">HOLCIM ES</div>
+      <div class="ctab c4"    data-c="4">MADERERA</div>
     </div>
     <div class="cb-right">
       <a href="../" class="cb-back">← Inicio</a>
@@ -194,6 +233,7 @@ html,body{height:100%;overflow:hidden}
     </div>
   </div>
 
+  <!-- MAIN -->
   <div id="main">
     <div id="editor">
       <div id="ed-hd">
@@ -206,47 +246,9 @@ html,body{height:100%;overflow:hidden}
         </div>
       </div>
 
-      <!-- TAB: DATOS -->
-      <div class="tc on" data-t="datos">
-        <!-- Tipo de documento -->
-        <div class="dtype-wrap">
-          <button class="dtype-btn on cot" data-dt="cotizacion">📋 Cotización</button>
-          <button class="dtype-btn rep"    data-dt="reporte">🔍 Reporte de Daños</button>
-        </div>
+      <div class="tc on" data-t="datos"><div id="datos-ed"></div></div>
+      <div class="tc" data-t="trab"><div id="items-ed"></div></div>
 
-        <div class="fl" style="margin-bottom:4px">Logo del taller</div>
-        <div class="logo-box">
-          <input type="file" id="logo-inp" accept="image/*">
-          <div id="logo-prv" class="logo-ph">🏭&nbsp; Clic para subir logo</div>
-        </div>
-        <div class="g2">
-          <div class="fg"><div class="fl">Fecha</div><input class="fi" id="f-fecha"></div>
-          <div class="fg">
-            <div class="fl" id="num-label">Cotización #</div>
-            <div class="cot-row">
-              <input class="fi" id="f-num" style="font-weight:700;letter-spacing:1px">
-              <button class="cot-btn" id="btn-num-rst" title="Ajustar contador">↺</button>
-            </div>
-          </div>
-        </div>
-        <div class="fg"><div class="fl">Cliente</div><input class="fi" id="f-cli" placeholder="Nombre del cliente"></div>
-        <div class="g2">
-          <div class="fg"><div class="fl">Proveedor #</div><input class="fi" id="f-prov"></div>
-          <div class="fg"><div class="fl">Ubicación</div><input class="fi" id="f-ubi" placeholder="Ej: TOLUCA"></div>
-        </div>
-        <div class="sec">Datos internos</div>
-        <div class="g2">
-          <div class="fg"><div class="fl">O.T.</div><input class="fi" id="f-ot"></div>
-          <div class="fg"><div class="fl" id="cr-label">CR</div><input class="fi" id="f-cr"></div>
-        </div>
-      </div>
-
-      <!-- TAB: TRABAJOS / REPORTE -->
-      <div class="tc" data-t="trab">
-        <div id="items-ed"></div>
-      </div>
-
-      <!-- TAB: BORRADORES -->
       <div class="tc" data-t="bor">
         <div class="dbrow">
           <button class="db pri" id="btn-save">💾 Guardar</button>
@@ -266,10 +268,7 @@ html,body{height:100%;overflow:hidden}
   </div>
 </div>
 
-<div id="loading">
-  <div class="ld-spin"></div>
-  <div class="ld-txt">Conectando…</div>
-</div>
+<div id="loading"><div class="ld-spin"></div><div class="ld-txt">Conectando…</div></div>
 <div id="toast"></div>
 
 <script>
@@ -278,11 +277,30 @@ if (!sessionStorage.getItem('bob_auth')) window.location.replace('../');
 
 // ── CLIENTES ──
 const CLIENTS = [
-  {id:'cemex',   label:'CEMEX',              tab:'CEMEX',        crLabel:'CR'},
-  {id:'holcim',  label:'HOLCIM',             tab:'HOLCIM',       crLabel:'RE'},
-  {id:'cemex2',  label:'Cementos Españoles', tab:'C. ESPAÑOLES', crLabel:'BP'},
-  {id:'cemex3',  label:'Holcim ES',          tab:'HOLCIM ES',    crLabel:'RE'},
+  {id:'cemex',    label:'CEMEX',              tab:'CEMEX',        crLabel:'CR'},
+  {id:'holcim',   label:'HOLCIM',             tab:'HOLCIM',       crLabel:'RE'},
+  {id:'cemex2',   label:'Cementos Españoles', tab:'C. ESPAÑOLES', crLabel:'BP'},
+  {id:'cemex3',   label:'Holcim ES',          tab:'HOLCIM ES',    crLabel:'RE'},
+  {id:'maderera', label:'Maderera',           tab:'MADERERA',     crLabel:''},
 ];
+
+// ── MADERERA FIXED DATA ──
+const MAD = {
+  dir:   'Miguel Ocaranza 97b, Merced Gómez, C.P: 01600, CDMX',
+  email: 'contacto@maderera.mx',
+  tel:   '55 5660 5215',
+  web:   'maderera.mx',
+  banco: 'BBVA',
+  nombre:'Mixteca Exotic Woods, S.A. de C.V.',
+  clabe: '012180001262384329',
+  cuenta:'0126238432',
+  mail:  'margarita@comercialmaderera.com',
+  cierre:[
+    'Nuestros precios son por metro cuadrado o lineal colocados e incluyen mermas.',
+    'Estos precios son con IVA incluido y la forma de pago es del 75% de anticipo y el saldo al concluir los trabajos.',
+    'Sin otro particular al respecto nos es muy grato quedar de usted a sus apreciables órdenes.'
+  ]
+};
 
 // ── BLOB ──
 const BLOB_BASE = 'https://kanbandevopsgz.blob.core.windows.net/cotizador-data/';
@@ -295,21 +313,17 @@ let S = freshState();
 
 function freshState(){
   return {
-    logoB64: null,
-    docType: 'cotizacion',      // 'cotizacion' | 'reporte'
-    // Cotización
-    fecha: todayS(), cot:'0001', cli:'', prov:'', ubi:'', ot:'', cr:'',
-    rows: initRows(15),
-    counter: 1,
-    // Reporte
-    rep: '0001',
-    reporteTitulo: '',
-    reporteTexto: '',
-    reporteCounter: 1,
-    // Compartido
-    drafts: []
+    logoB64:null, docType:'cotizacion',
+    fecha:todayS(), cot:'0001', cli:'', prov:'', ubi:'', ot:'', cr:'',
+    rows:initRows(15), counter:1,
+    rep:'0001', reporteTitulo:'', reporteTexto:'', reporteCounter:1,
+    madNum:'0001', madCounter:1,
+    madDest:'', madTrat:'Estimada/o', madProyecto:'', madFirmante:'',
+    madItems:[freshMadItem()],
+    drafts:[]
   };
 }
+function freshMadItem(){ return {titulo:'',descripcion:'',precio:''}; }
 
 function eRow(){ return {d:'',q:'',p:''}; }
 function initRows(n){ return Array(n).fill(0).map(eRow); }
@@ -319,7 +333,9 @@ function pn(s){ const n=parseFloat((''+(s||'')).replace(/[$,\s]/g,'')); return i
 function rSub(r){ const q=pn(r.q),p=pn(r.p); return q>0&&p>0?q*p:0; }
 function gTotal(){ return S.rows.reduce((a,r)=>a+rSub(r),0); }
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function isMad(){ return activeIdx===4; }
 function isCot(){ return S.docType==='cotizacion'; }
+function crLbl(){ return CLIENTS[activeIdx].crLabel; }
 
 // ── CACHE ──
 function cacheKey(){ return 'bob_cache_'+CLIENTS[activeIdx].id; }
@@ -337,19 +353,11 @@ async function blobWrite(data){
   const res=await fetch(blobUrl(),{method:'PUT',headers:{'x-ms-blob-type':'BlockBlob','Content-Type':'application/json'},body:JSON.stringify(data)});
   if(!res.ok)throw new Error('HTTP '+res.status);
 }
-function getBlob(){ return {counter:S.counter,reporteCounter:S.reporteCounter,drafts:S.drafts,logo:S.logoB64}; }
+function getBlob(){ return {counter:S.counter,reporteCounter:S.reporteCounter,madCounter:S.madCounter,drafts:S.drafts,logo:S.logoB64}; }
 
 // ── SYNC ──
-function syncSt(st){
-  const el=document.getElementById('sync-st'); if(!el)return;
-  el.className=st;
-  el.textContent=st==='ok'?'☁ Sincronizado':st==='ing'?'↻ Guardando…':'⚠ Sin conexión';
-}
-async function saveAll(){
-  syncSt('ing');
-  try{ await blobWrite(getBlob()); cacheWrite(getBlob()); syncSt('ok'); return true; }
-  catch(e){ syncSt('err'); return false; }
-}
+function syncSt(st){ const el=document.getElementById('sync-st'); if(!el)return; el.className=st; el.textContent=st==='ok'?'☁ Sincronizado':st==='ing'?'↻ Guardando…':'⚠ Sin conexión'; }
+async function saveAll(){ syncSt('ing'); try{ await blobWrite(getBlob()); cacheWrite(getBlob()); syncSt('ok'); return true; }catch(e){ syncSt('err'); return false; } }
 
 // ── TOAST / LOADING ──
 function toast(m,e){ const t=document.getElementById('toast'); t.textContent=m; t.style.background=e?'#dc2626':'#16a34a'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2300); }
@@ -361,21 +369,10 @@ function swTab(n){ document.querySelectorAll('.tab').forEach(t=>t.classList.togg
 // ── DOC TYPE ──
 function swDocType(dt){
   S.docType=dt;
-  // Toggle buttons
   document.querySelectorAll('.dtype-btn').forEach(b=>b.classList.toggle('on',b.dataset.dt===dt));
-  // Trabajos tab label
-  const tt=document.getElementById('tab-trab');
-  if(tt) tt.textContent=isCot()?'🔧 Trabajos':'📝 Reporte';
-  // Print button color
-  const bp=document.getElementById('btn-print');
-  if(bp){ bp.className='bpr '+(isCot()?'cot':'rep'); }
-  // Number field label
-  const nl=document.getElementById('num-label');
-  if(nl) nl.textContent=isCot()?'Cotización #':'Reporte #';
-  // Number field value
-  setV('f-num', isCot()?S.cot:S.rep);
-  buildContent();
-  rPreview();
+  const tt=document.getElementById('tab-trab'); if(tt) tt.textContent=isCot()?'🔧 Trabajos':'📝 Reporte';
+  const bp=document.getElementById('btn-print'); if(bp) bp.className='bpr '+(isCot()?'cot':'rep');
+  buildContent(); rPreview();
 }
 
 // ── DOM HELPERS ──
@@ -397,38 +394,189 @@ function logoSVG(){
     <rect x="2" y="28" width="11" height="7" rx="1" fill="#a8c8e8"/>
   </svg>`;
 }
+function madLogoSVG(w,col){
+  return `<svg width="${w}" height="${w}" viewBox="0 0 38 38" fill="none">
+    <ellipse cx="19" cy="10" rx="5" ry="7" fill="${col}" opacity=".9"/>
+    <ellipse cx="10" cy="16" rx="5" ry="7" fill="${col}" opacity=".75" transform="rotate(-30 10 16)"/>
+    <ellipse cx="28" cy="16" rx="5" ry="7" fill="${col}" opacity=".75" transform="rotate(30 28 16)"/>
+    <ellipse cx="14" cy="26" rx="4.5" ry="6.5" fill="${col}" opacity=".6" transform="rotate(-15 14 26)"/>
+    <ellipse cx="24" cy="26" rx="4.5" ry="6.5" fill="${col}" opacity=".6" transform="rotate(15 24 26)"/>
+    <rect x="17.5" y="28" width="2.5" height="9" rx="1" fill="${col}"/>
+  </svg>`;
+}
 function updLogo(){ const e=document.getElementById('logo-prv'); if(!e)return; e.innerHTML=S.logoB64?`<img src="${S.logoB64}" style="max-height:46px;max-width:100%;object-fit:contain"><br><span style="font-size:9px;color:#6b7280">Clic para cambiar</span>`:'🏭&nbsp; Clic para subir logo'; }
 
-// ── CONTENT EDITOR (Trabajos o Reporte) ──
-function buildContent(){
-  const c=document.getElementById('items-ed'); if(!c)return;
+// ── BUILD DATOS TAB ──
+function buildDatos(){
+  const c=document.getElementById('datos-ed'); if(!c)return;
 
-  if(!isCot()){
-    // ── Reporte de Daños editor ──
+  if(isMad()){
     c.innerHTML=`
-      <div class="fg">
-        <div class="fl">Título / Asunto</div>
-        <input class="fi" id="rep-titulo" value="${esc(S.reporteTitulo)}" placeholder="Ej: Transmisión Fotón Gen 1 sincronizada">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;background:#1a2338;border-radius:4px;padding:10px 12px">
+        ${madLogoSVG(32,'#c07040')}
+        <div>
+          <div style="font-size:13px;font-weight:700;letter-spacing:2px;color:#c07040">MADERERA</div>
+          <div style="font-size:9px;color:#4b5563;letter-spacing:.5px">maderera.mx</div>
+        </div>
       </div>
-      <div class="fg">
-        <div class="fl">Descripción del reporte</div>
-        <textarea class="rep-ta" id="rep-texto" placeholder="Describe el daño encontrado, causas, observaciones y recomendaciones…">${esc(S.reporteTexto)}</textarea>
-        <div class="rep-info" id="rep-chars">0 caracteres</div>
-      </div>`;
+      <div class="g2">
+        <div class="fg"><div class="fl">Fecha</div><input class="fi" id="f-fecha" value="${esc(S.fecha)}"></div>
+        <div class="fg"><div class="fl">Presupuesto #</div>
+          <div class="cot-row">
+            <input class="fi" id="f-num" style="font-weight:700;letter-spacing:1px" value="${esc(S.madNum)}">
+            <button class="cot-btn" id="btn-num-rst">↺</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg"><div class="fl">Destinatario</div><input class="fi" id="f-dest" placeholder="Arq. Maritza" value="${esc(S.madDest)}"></div>
+      <div class="fg"><div class="fl">Tratamiento</div><input class="fi" id="f-trat" placeholder="Estimada Arquitecta" value="${esc(S.madTrat)}"></div>
+      <div class="fg"><div class="fl">Proyecto / Obra</div><input class="fi" id="f-proy" placeholder="Parral #32, Colonia Condesa, CDMX" value="${esc(S.madProyecto)}"></div>
+      <div class="fg"><div class="fl">Firmante</div><input class="fi" id="f-firm" placeholder="NOMBRE COMPLETO" value="${esc(S.madFirmante)}"></div>`;
 
-    const ti=document.getElementById('rep-titulo');
-    const tx=document.getElementById('rep-texto');
-    const ch=document.getElementById('rep-chars');
-
-    const updChars=()=>{ if(ch) ch.textContent=tx.value.length+' caracteres'; };
-    updChars();
-
-    ti.addEventListener('input',e=>{ S.reporteTitulo=e.target.value; rPreview(); });
-    tx.addEventListener('input',e=>{ S.reporteTexto=e.target.value; updChars(); rPreview(); });
+    document.getElementById('f-fecha').addEventListener('input',e=>{S.fecha=e.target.value;rPreview();});
+    document.getElementById('f-num').addEventListener('input',e=>{S.madNum=e.target.value;rPreview();});
+    document.getElementById('f-dest').addEventListener('input',e=>{S.madDest=e.target.value;rPreview();});
+    document.getElementById('f-trat').addEventListener('input',e=>{S.madTrat=e.target.value;rPreview();});
+    document.getElementById('f-proy').addEventListener('input',e=>{S.madProyecto=e.target.value;rPreview();});
+    document.getElementById('f-firm').addEventListener('input',e=>{S.madFirmante=e.target.value;rPreview();});
+    document.getElementById('btn-num-rst').addEventListener('click',()=>{
+      const val=prompt('Ajustar contador de presupuestos:',S.madCounter);
+      if(val===null)return;
+      const n=parseInt(val); if(isNaN(n)||n<0){toast('Número inválido',true);return;}
+      S.madCounter=n; S.madNum=String(n).padStart(4,'0');
+      setV('f-num',S.madNum); rPreview();
+      saveAll().then(ok=>toast(ok?`✓ Contador a ${S.madNum}`:'✓ Ajustado',!ok));
+    });
     return;
   }
 
-  // ── Cotización items editor ──
+  // Regular clients
+  c.innerHTML=`
+    <div class="dtype-wrap">
+      <button class="dtype-btn ${isCot()?'on cot':'cot'}" data-dt="cotizacion">📋 Cotización</button>
+      <button class="dtype-btn ${!isCot()?'on rep':'rep'}" data-dt="reporte">🔍 Reporte de Daños</button>
+    </div>
+    <div class="fl" style="margin-bottom:4px">Logo del taller</div>
+    <div class="logo-box">
+      <input type="file" id="logo-inp" accept="image/*">
+      <div id="logo-prv" class="logo-ph">🏭&nbsp; Clic para subir logo</div>
+    </div>
+    <div class="g2">
+      <div class="fg"><div class="fl">Fecha</div><input class="fi" id="f-fecha" value="${esc(S.fecha)}"></div>
+      <div class="fg">
+        <div class="fl" id="num-label">${isCot()?'Cotización #':'Reporte #'}</div>
+        <div class="cot-row">
+          <input class="fi" id="f-num" style="font-weight:700;letter-spacing:1px" value="${esc(isCot()?S.cot:S.rep)}">
+          <button class="cot-btn" id="btn-num-rst">↺</button>
+        </div>
+      </div>
+    </div>
+    <div class="fg"><div class="fl">Cliente</div><input class="fi" id="f-cli" placeholder="Nombre del cliente" value="${esc(S.cli)}"></div>
+    <div class="g2">
+      <div class="fg"><div class="fl">Proveedor #</div><input class="fi" id="f-prov" value="${esc(S.prov)}"></div>
+      <div class="fg"><div class="fl">Ubicación</div><input class="fi" id="f-ubi" placeholder="Ej: TOLUCA" value="${esc(S.ubi)}"></div>
+    </div>
+    <div class="sec">Datos internos</div>
+    <div class="g2">
+      <div class="fg"><div class="fl">O.T.</div><input class="fi" id="f-ot" value="${esc(S.ot)}"></div>
+      <div class="fg"><div class="fl" id="cr-label">${crLbl()}</div><input class="fi" id="f-cr" value="${esc(S.cr)}"></div>
+    </div>`;
+
+  updLogo();
+
+  document.getElementById('f-fecha').addEventListener('input',e=>{S.fecha=e.target.value;rPreview();});
+  document.getElementById('f-num').addEventListener('input',e=>{ if(isCot())S.cot=e.target.value; else S.rep=e.target.value; rPreview();});
+  document.getElementById('f-cli').addEventListener('input',e=>{S.cli=e.target.value;rPreview();});
+  document.getElementById('f-prov').addEventListener('input',e=>{S.prov=e.target.value;rPreview();});
+  document.getElementById('f-ubi').addEventListener('input',e=>{S.ubi=e.target.value;rPreview();});
+  document.getElementById('f-ot').addEventListener('input',e=>{S.ot=e.target.value;rPreview();});
+  document.getElementById('f-cr').addEventListener('input',e=>{S.cr=e.target.value;rPreview();});
+
+  document.getElementById('logo-inp').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(!f)return;
+    if(f.size>4e6){toast('Logo muy grande (máx 4 MB)',true);return;}
+    const reader=new FileReader();
+    reader.onload=async ev=>{S.logoB64=ev.target.result;updLogo();rPreview();const ok=await saveAll();toast(ok?'✓ Logo guardado':'✓ Logo cargado',!ok);};
+    reader.readAsDataURL(f);
+  });
+
+  document.getElementById('btn-num-rst').addEventListener('click',()=>{
+    const cur=isCot()?S.counter:S.reporteCounter;
+    const val=prompt(`Ajustar contador:`,cur);
+    if(val===null)return;
+    const n=parseInt(val); if(isNaN(n)||n<0){toast('Número inválido',true);return;}
+    if(isCot()){S.counter=n;S.cot=String(n).padStart(4,'0');}
+    else{S.reporteCounter=n;S.rep=String(n).padStart(4,'0');}
+    setV('f-num',isCot()?S.cot:S.rep); rPreview();
+    saveAll().then(ok=>toast(ok?`✓ Contador ajustado`:'✓ Ajustado',!ok));
+  });
+
+  document.querySelectorAll('.dtype-btn').forEach(b=>b.addEventListener('click',()=>swDocType(b.dataset.dt)));
+}
+
+// ── BUILD TRABAJOS / REPORTE / MADERERA ──
+function buildContent(){
+  const c=document.getElementById('items-ed'); if(!c)return;
+  const tt=document.getElementById('tab-trab');
+
+  if(isMad()){
+    if(tt) tt.textContent='🏷 Ítems';
+    const bp=document.getElementById('btn-print'); if(bp) bp.className='bpr mad';
+    let h='';
+    S.madItems.forEach((item,i)=>{
+      h+=`<div class="mad-item-block" data-mi="${i}">
+        <div class="mad-item-hd">
+          <div class="mad-item-lbl">Ítem ${i+1}</div>
+          ${S.madItems.length>1?`<span class="irem" data-mi="${i}" style="color:#374151">×</span>`:''}
+        </div>
+        <div class="fg"><div class="fl" style="margin-bottom:2px">Título (negrita)</div>
+          <input class="fi" style="font-size:11px;font-weight:600" data-mf="titulo" data-mi="${i}" value="${esc(item.titulo)}" placeholder="Opción 1) Duela de Encino…">
+        </div>
+        <div class="fg"><div class="fl" style="margin-bottom:2px">Descripción</div>
+          <textarea class="rep-ta mad" data-mf="descripcion" data-mi="${i}" placeholder="Suministro e instalación de…">${esc(item.descripcion)}</textarea>
+        </div>
+        <div class="fg"><div class="fl" style="margin-bottom:2px">Precio</div>
+          <input class="fi ri-r" style="width:130px" data-mf="precio" data-mi="${i}" value="${esc(item.precio)}" placeholder="0.00">
+        </div>
+      </div>`;
+    });
+    h+=`<button class="add-btn" id="add-mad-item" style="border-color:#7c3d1e;color:#7c3d1e">+ Agregar ítem</button>`;
+    c.innerHTML=h;
+    c.querySelectorAll('input[data-mf],textarea[data-mf]').forEach(el=>{
+      el.addEventListener('input',e=>{
+        const i=parseInt(e.target.dataset.mi),f=e.target.dataset.mf;
+        S.madItems[i][f]=e.target.value; rPreview();
+      });
+    });
+    c.querySelectorAll('.irem[data-mi]').forEach(btn=>btn.addEventListener('click',ev=>{
+      const i=parseInt(ev.target.dataset.mi); if(S.madItems.length<=1){toast('Mínimo 1 ítem',true);return;}
+      S.madItems.splice(i,1);buildContent();rPreview();
+    }));
+    const addBtn=document.getElementById('add-mad-item');
+    if(addBtn) addBtn.addEventListener('click',()=>{ S.madItems.push(freshMadItem());buildContent();rPreview(); const tc=c.closest('.tc');if(tc)tc.scrollTop=tc.scrollHeight; });
+    return;
+  }
+
+  if(!isCot()){
+    if(tt) tt.textContent='📝 Reporte';
+    const bp=document.getElementById('btn-print'); if(bp) bp.className='bpr rep';
+    c.innerHTML=`
+      <div class="fg"><div class="fl">Título / Asunto</div><input class="fi" id="rep-titulo" value="${esc(S.reporteTitulo)}" placeholder="Ej: Transmisión Fotón Gen 1"></div>
+      <div class="fg"><div class="fl">Descripción del reporte</div>
+        <textarea class="rep-ta" style="min-height:320px" id="rep-texto" placeholder="Describe el daño…">${esc(S.reporteTexto)}</textarea>
+        <div class="rep-info" id="rep-chars">${S.reporteTexto.length} caracteres</div>
+      </div>`;
+    document.getElementById('rep-titulo').addEventListener('input',e=>{S.reporteTitulo=e.target.value;rPreview();});
+    document.getElementById('rep-texto').addEventListener('input',e=>{
+      S.reporteTexto=e.target.value;
+      const ch=document.getElementById('rep-chars'); if(ch)ch.textContent=e.target.value.length+' caracteres';
+      rPreview();
+    });
+    return;
+  }
+
+  if(tt) tt.textContent='🔧 Trabajos';
+  const bp=document.getElementById('btn-print'); if(bp) bp.className='bpr cot';
   let h=`<div class="ihead"><span></span><div class="ihl">Descripción</div><div class="ihl">Cant.</div><div class="ihl">P. Unit.</div><div class="ihl">Sub.</div><div class="ihl"></div></div>`;
   S.rows.forEach((r,i)=>{
     const sub=rSub(r);
@@ -444,7 +592,6 @@ function buildContent(){
   h+=`<button class="add-btn" id="add-row">+ Agregar renglón</button>
   <div class="tbar"><span class="tbar-l">Total</span><span class="tbar-v" id="ed-tot">${gt>0?fmt(gt):'—'}</span></div>`;
   c.innerHTML=h;
-
   c.querySelectorAll('input[data-f]').forEach(inp=>{
     inp.addEventListener('input',ev=>{
       const i=parseInt(ev.target.dataset.i),f=ev.target.dataset.f;
@@ -465,13 +612,17 @@ function buildContent(){
 // ── PREVIEW ──
 function rPreview(){
   const pvw=document.getElementById('pvw'); if(!pvw)return;
-  const logoEl=S.logoB64?`<img src="${S.logoB64}" style="max-width:141px;max-height:107px;object-fit:contain">`:logoSVG();
-  const numLabel = isCot()?'COTIZACIÓN':'REPORTE';
-  const numVal   = isCot()?S.cot:S.rep;
 
+  if(isMad()){
+    rMadPreview(pvw); return;
+  }
+
+  // Bobadilla preview
+  const logoEl=S.logoB64?`<img src="${S.logoB64}" style="max-width:141px;max-height:107px;object-fit:contain">`:logoSVG();
+  const numLabel=isCot()?'COTIZACIÓN':'REPORTE';
+  const numVal=isCot()?S.cot:S.rep;
   let body='';
   if(isCot()){
-    // Tabla de cotización
     const gt=gTotal();
     let rows='';
     S.rows.forEach((r,i)=>{
@@ -479,25 +630,18 @@ function rPreview(){
       rows+=`<tr><td class="r" style="color:#bbb;font-size:8px">${r.d?i+1:''}</td><td>${esc(r.d)}&nbsp;</td><td class="r">${r.q||''}</td><td class="r">${r.p&&pn(r.p)>0?fmt(pn(r.p)):''}</td><td class="r">${sub>0?fmt(sub):''}</td></tr>`;
     });
     if(gt>0) rows+=`<tr class="trow"><td colspan="4" class="r" style="border-right:1px solid #333">TOTAL:</td><td class="r">${fmt(gt)}</td></tr>`;
-    body=`<table class="dtbl">
-      <colgroup><col style="width:26px"><col><col style="width:46px"><col style="width:78px"><col style="width:82px"></colgroup>
+    body=`<table class="dtbl"><colgroup><col style="width:26px"><col><col style="width:46px"><col style="width:78px"><col style="width:82px"></colgroup>
       <thead><tr><th class="r">#</th><th>Descripción del trabajo</th><th class="r">Cant.</th><th class="r">P. Unitario</th><th class="r">Importe</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+      <tbody>${rows}</tbody></table>`;
   } else {
-    // Cuerpo del reporte de daños
-    body=`
-      ${S.reporteTitulo?`<div class="rep-titulo-doc">${esc(S.reporteTitulo)}</div>`:''}
+    body=`${S.reporteTitulo?`<div class="rep-titulo-doc">${esc(S.reporteTitulo)}</div>`:''}
       <div class="rep-body-doc">${esc(S.reporteTexto).replace(/\n/g,'<br>')}</div>`;
   }
-
   const gt=isCot()?gTotal():0;
   pvw.innerHTML=`<div class="doc">
-    <div class="dhead">
-      <div class="dlogw">${logoEl}</div>
+    <div class="dhead"><div class="dlogw">${logoEl}</div>
       <div class="dtitle"><div class="dt1">TALLER DE SERVICIO Y SOLDADURA</div><div class="dt2">BOBADILLA</div><div class="dt3">MECÁNICA Y TODO TIPO DE SOLDADURA</div></div>
-      <div style="width:141px"></div>
-    </div>
+      <div style="width:141px"></div></div>
     <div class="dfr"><div class="dfc">FECHA:&nbsp;<span class="dval">${esc(S.fecha)}</span></div></div>
     <div class="dclir">
       <div class="dcell">CLIENTE:&nbsp;<span class="dval">${esc(S.cli)}</span></div>
@@ -509,11 +653,82 @@ function rPreview(){
     ${body}
     <div class="dftr">
       <div class="dft-ot"><strong>O. T.</strong>&nbsp;&nbsp;${esc(S.ot)}</div>
-      <div class="dft-cr"><strong>${CLIENTS[activeIdx].crLabel} -</strong>&nbsp;&nbsp;${esc(S.cr)}</div>
+      <div class="dft-cr"><strong>${crLbl()} -</strong>&nbsp;&nbsp;${esc(S.cr)}</div>
       <div class="dft-tot">TOTAL:&nbsp;<span style="font-size:12px">${gt>0?fmt(gt):''}</span></div>
     </div>
     <div class="dsigs"><div class="dsig">FIRMA</div><div class="dsig">FIRMA</div><div class="dsig">FIRMA</div></div>
     <div class="dcontact">CÉSAR BOBADILLA RÍOS&nbsp;&nbsp;|&nbsp;&nbsp;CEL. 55 3944 9553 / 55 2116 5737</div>
+  </div>`;
+}
+
+function rMadPreview(pvw){
+  const dest  = S.madDest  || 'Destinatario';
+  const trat  = S.madTrat  || 'Estimada/o';
+  const proy  = S.madProyecto || '[proyecto]';
+  const firm  = S.madFirmante|| 'NOMBRE APELLIDO';
+
+  // Date in long Spanish format
+  const now = new Date();
+  const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const fechaLarga = S.fecha
+    ? (()=>{ const p=S.fecha.split('/'); return `${parseInt(p[0])} de ${meses[parseInt(p[1])-1]} de ${p[2]}`; })()
+    : `${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+
+  let itemsHtml='';
+  (S.madItems||[]).forEach(item=>{
+    if(!item.titulo&&!item.descripcion)return;
+    const precio = item.precio ? (item.precio.includes('$')?esc(item.precio):'$'+esc(item.precio)) : '';
+    itemsHtml+=`<div class="mad-item">
+      <div class="mad-item-left">
+        ${item.titulo?`<div class="mad-item-title">${esc(item.titulo)}</div>`:''}
+        <div class="mad-item-desc">${esc(item.descripcion)}</div>
+      </div>
+      <div class="mad-item-price">${precio}</div>
+    </div>`;
+  });
+
+  pvw.innerHTML=`<div class="mad-doc">
+    <div class="mad-logo-area">
+      ${madLogoSVG(38,'#6b2e13')}
+      <div class="mad-logo-name">MADERERA</div>
+    </div>
+    <div class="mad-date">Ciudad de México a, ${fechaLarga}</div>
+    <div class="mad-recipient">
+      <p>${esc(dest)}</p>
+      <p style="letter-spacing:3px;font-size:11px">P r e s e n t e</p>
+    </div>
+    <div class="mad-saludo">${esc(trat)} ${esc(dest)}:</div>
+    <div class="mad-intro">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Por este conducto tenemos mucho gusto en presentarles el siguiente presupuesto para el suministro e instalación de pisos de madera para el proyecto: ${esc(proy)}.</div>
+    ${itemsHtml}
+    <div class="mad-closing">
+      ${MAD.cierre.map(p=>`<p>${p}</p>`).join('')}
+    </div>
+    <div class="mad-firma-area">
+      <div class="mad-firma-word">ATENTAMENTE</div>
+      <div class="mad-firma-script">${esc(firm.split(' ').map(w=>w[0]||'').join('')+firm.split(' ').slice(-1)[0]||'Firma')}.</div>
+      <div class="mad-firma-line"></div>
+      <div class="mad-firma-nombre">${esc(firm)}</div>
+    </div>
+    <div class="mad-bank-box">
+      <div class="mad-bank-title">Datos para depósitos o transferencias:</div>
+      <div class="mad-bank-row"><span class="mad-bank-label">Banco:</span><span>${MAD.banco}</span></div>
+      <div class="mad-bank-row"><span class="mad-bank-label">Nombre:</span><span>${MAD.nombre}</span></div>
+      <div class="mad-bank-row"><span class="mad-bank-label">Clabe:</span><span>${MAD.clabe}</span></div>
+      <div class="mad-bank-row"><span class="mad-bank-label">Cuenta:</span><span>${MAD.cuenta}</span></div>
+      <div class="mad-bank-row"><span class="mad-bank-label">Mail:</span><span>${MAD.mail}</span></div>
+    </div>
+    <div class="mad-precios-note">Precios sujetos a cambio sin previo aviso</div>
+    <div class="mad-footer">
+      <div class="mad-footer-left">
+        <div class="mad-footer-item"><span>◉</span><span>${MAD.dir}</span></div>
+        <div class="mad-footer-item"><span>✉</span><span>${MAD.email}</span></div>
+        <div class="mad-footer-item"><span>✆</span><span>${MAD.tel}</span></div>
+      </div>
+      <div class="mad-footer-right">
+        <div class="mad-footer-brand">${MAD.web}</div>
+        ${madLogoSVG(26,'#e8d5c4')}
+      </div>
+    </div>
   </div>`;
 }
 
@@ -522,8 +737,9 @@ function rDrafts(){
   const c=document.getElementById('draft-list'); if(!c)return;
   if(!S.drafts.length){c.innerHTML='<div class="no-d">No hay documentos guardados</div>';return;}
   c.innerHTML=S.drafts.map(d=>{
-    const isc=!d.data||d.data.docType!=='reporte';
-    const badge=isc?'<span class="dtype-badge cot">COT</span>':'<span class="dtype-badge rep">REP</span>';
+    const dt=d.data&&d.data.docType;
+    const m=d.data&&d.data.madNum;
+    const badge=m?'<span class="dtype-badge mad">PRES</span>':dt==='reporte'?'<span class="dtype-badge rep">REP</span>':'<span class="dtype-badge cot">COT</span>';
     return `<div class="ditem" data-id="${d.id}">
       <div><div class="dname">${esc(d.name)}${badge}</div><div class="ddate">${d.date}</div></div>
       <span class="ddel" data-id="${d.id}">×</span>
@@ -536,16 +752,18 @@ function rDrafts(){
 }
 
 async function saveDraft(){
-  const prefix=isCot()?'COT':'REP';
-  const num=isCot()?S.cot:S.rep;
-  const name=`${prefix}-${num}${S.cli?' — '+S.cli:''}`;
+  let prefix,num,desc;
+  if(isMad()){prefix='PRES';num=S.madNum;desc=S.madDest||S.madProyecto;}
+  else if(isCot()){prefix='COT';num=S.cot;desc=S.cli;}
+  else{prefix='REP';num=S.rep;desc=S.cli;}
+  const name=`${prefix}-${num}${desc?' — '+desc:''}`;
   const now=new Date();
   const date=now.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
   S.drafts.unshift({id:'d'+Date.now(),name,date,data:JSON.parse(JSON.stringify({...S,logoB64:null,drafts:[]}))});
   if(S.drafts.length>50)S.drafts=S.drafts.slice(0,50);
   rDrafts();
   const ok=await saveAll();
-  toast(ok?`✓ ${isCot()?'Cotización':'Reporte'} guardado en la nube`:`✓ Guardado (sin conexión)`,!ok);
+  toast(ok?'✓ Guardado en la nube':'✓ Guardado (sin conexión)',!ok);
 }
 
 function loadDraft(d){
@@ -553,12 +771,15 @@ function loadDraft(d){
   const x=d.data;
   Object.assign(S,{
     docType:x.docType||'cotizacion',
-    fecha:x.fecha||todayS(), cot:x.cot||'0001', cli:x.cli||'',
-    prov:x.prov||'', ubi:x.ubi||'', ot:x.ot||'', cr:x.cr||'',
+    fecha:x.fecha||todayS(),cot:x.cot||'0001',cli:x.cli||'',
+    prov:x.prov||'',ubi:x.ubi||'',ot:x.ot||'',cr:x.cr||'',
     rows:x.rows||initRows(15),
-    rep:x.rep||'0001', reporteTitulo:x.reporteTitulo||'', reporteTexto:x.reporteTexto||''
+    rep:x.rep||'0001',reporteTitulo:x.reporteTitulo||'',reporteTexto:x.reporteTexto||'',
+    madNum:x.madNum||'0001',madDest:x.madDest||'',madTrat:x.madTrat||'Estimada/o',
+    madProyecto:x.madProyecto||'',madFirmante:x.madFirmante||'',
+    madItems:x.madItems||[freshMadItem()],
   });
-  updateFormFields();buildContent();rPreview();swTab('datos');toast('✓ Documento cargado');
+  buildDatos();buildContent();rPreview();swTab('datos');toast('✓ Documento cargado');
 }
 
 async function delDraft(id){
@@ -568,40 +789,22 @@ async function delDraft(id){
 
 // ── NUEVO ──
 async function newDoc(){
-  if(isCot()){
-    S.counter++;
-    S.cot=String(S.counter).padStart(4,'0');
-    S.rows=initRows(15);
+  if(isMad()){
+    S.madCounter++;S.madNum=String(S.madCounter).padStart(4,'0');
+    S.fecha=todayS();S.madDest='';S.madTrat='Estimada/o';S.madProyecto='';S.madFirmante='';
+    S.madItems=[freshMadItem()];
+  } else if(isCot()){
+    S.counter++;S.cot=String(S.counter).padStart(4,'0');
+    S.fecha=todayS();S.cli='';S.prov='';S.ubi='';S.ot='';S.cr='';S.rows=initRows(15);
   } else {
-    S.reporteCounter++;
-    S.rep=String(S.reporteCounter).padStart(4,'0');
-    S.reporteTitulo=''; S.reporteTexto='';
+    S.reporteCounter++;S.rep=String(S.reporteCounter).padStart(4,'0');
+    S.fecha=todayS();S.cli='';S.prov='';S.ubi='';S.ot='';S.cr='';
+    S.reporteTitulo='';S.reporteTexto='';
   }
-  S.fecha=todayS(); S.cli=''; S.prov=''; S.ubi=''; S.ot=''; S.cr='';
-  updateFormFields();buildContent();rPreview();swTab('datos');
-  await saveAll();
-  toast(`✓ Nuevo ${isCot()?'COT':'REP'}-${isCot()?S.cot:S.rep}`);
-}
-
-// ── UPDATE FIELDS ──
-function updateCrLabel(){
-  const el=document.getElementById('cr-label');
-  if(el) el.textContent=CLIENTS[activeIdx].crLabel;
-}
-function updateFormFields(){
-  setV('f-fecha',S.fecha);
-  setV('f-num', isCot()?S.cot:S.rep);
-  setV('f-cli',S.cli); setV('f-prov',S.prov); setV('f-ubi',S.ubi);
-  setV('f-ot',S.ot); setV('f-cr',S.cr);
-  updateCrLabel();
-  // Sync toggle + labels
-  document.querySelectorAll('.dtype-btn').forEach(b=>b.classList.toggle('on',b.dataset.dt===S.docType));
-  const tt=document.getElementById('tab-trab');
-  if(tt) tt.textContent=isCot()?'🔧 Trabajos':'📝 Reporte';
-  const nl=document.getElementById('num-label');
-  if(nl) nl.textContent=isCot()?'Cotización #':'Reporte #';
-  const bp=document.getElementById('btn-print');
-  if(bp) bp.className='bpr '+(isCot()?'cot':'rep');
+  buildDatos();buildContent();rPreview();swTab('datos');await saveAll();
+  const prefix=isMad()?'PRES':isCot()?'COT':'REP';
+  const num=isMad()?S.madNum:isCot()?S.cot:S.rep;
+  toast(`✓ Nuevo ${prefix}-${num}`);
 }
 
 // ── LOAD FROM BLOB ──
@@ -610,20 +813,19 @@ async function loadClientFromBlob(){
   try{
     const data=await blobRead();
     if(data){
-      S.counter=data.counter||1;
-      S.reporteCounter=data.reporteCounter||1;
-      S.drafts=data.drafts||[];
-      S.logoB64=data.logo||null;
-      cacheWrite(data); loaded=true;
+      S.counter=data.counter||1;S.reporteCounter=data.reporteCounter||1;
+      S.madCounter=data.madCounter||1;S.drafts=data.drafts||[];S.logoB64=data.logo||null;
+      cacheWrite(data);loaded=true;
     }
-  }catch(e){ console.warn(e); }
+  }catch(e){console.warn(e);}
   if(!loaded){
     const cache=cacheRead();
-    if(cache){ S.counter=cache.counter||1; S.reporteCounter=cache.reporteCounter||1; S.drafts=cache.drafts||[]; S.logoB64=cache.logo||null; }
+    if(cache){S.counter=cache.counter||1;S.reporteCounter=cache.reporteCounter||1;S.madCounter=cache.madCounter||1;S.drafts=cache.drafts||[];S.logoB64=cache.logo||null;}
     syncSt('err');
-  } else { syncSt('ok'); }
+  }else{syncSt('ok');}
   S.cot=String(S.counter).padStart(4,'0');
   S.rep=String(S.reporteCounter).padStart(4,'0');
+  S.madNum=String(S.madCounter).padStart(4,'0');
 }
 
 // ── SWITCH CLIENT ──
@@ -631,14 +833,11 @@ async function switchClient(idx){
   if(idx===activeIdx)return;
   showLoading(true);
   await saveAll();
-  activeIdx=idx;
-  S=freshState();
+  activeIdx=idx;S=freshState();
   await loadClientFromBlob();
-  updateFormFields();
-  updLogo();buildContent();rPreview();rDrafts();
+  buildDatos();buildContent();rPreview();rDrafts();
   document.querySelectorAll('.ctab').forEach(t=>t.classList.toggle('on',parseInt(t.dataset.c)===idx));
   document.getElementById('ed-client-name').textContent='✦ '+CLIENTS[idx].label;
-  updateCrLabel();
   showLoading(false);
 }
 
@@ -647,59 +846,19 @@ async function init(){
   showLoading(true);
   S=freshState();
   await loadClientFromBlob();
-  updateFormFields();
+  buildDatos();buildContent();rPreview();rDrafts();
 
-  // Bind shared fields
-  ['fecha','cli','prov','ubi','ot','cr'].forEach(k=>bindF('f-'+k,k));
-
-  // Número de documento (COT o REP)
-  document.getElementById('f-num').addEventListener('input',ev=>{
-    if(isCot()) S.cot=ev.target.value;
-    else         S.rep=ev.target.value;
-    rPreview();
-  });
-
-  // Ajustar contador
-  document.getElementById('btn-num-rst').addEventListener('click',()=>{
-    const cur=isCot()?S.counter:S.reporteCounter;
-    const val=prompt(`Ajustar contador de ${isCot()?'cotizaciones':'reportes'}:`,cur);
-    if(val===null)return;
-    const n=parseInt(val); if(isNaN(n)||n<0){toast('Número inválido',true);return;}
-    if(isCot()){ S.counter=n; S.cot=String(n).padStart(4,'0'); }
-    else        { S.reporteCounter=n; S.rep=String(n).padStart(4,'0'); }
-    setV('f-num',isCot()?S.cot:S.rep);
-    rPreview();
-    saveAll().then(ok=>toast(ok?'✓ Contador ajustado':'✓ Ajustado (sin conexión)',!ok));
-  });
-
-  // Logo
-  document.getElementById('logo-inp').addEventListener('change',e=>{
-    const f=e.target.files[0]; if(!f)return;
-    if(f.size>4e6){toast('Logo muy grande (máx 4 MB)',true);return;}
-    const reader=new FileReader();
-    reader.onload=async ev=>{ S.logoB64=ev.target.result;updLogo();rPreview();const ok=await saveAll();toast(ok?'✓ Logo guardado':'✓ Logo cargado',!ok); };
-    reader.readAsDataURL(f);
-  });
-
-  // Tipo de documento
-  document.querySelectorAll('.dtype-btn').forEach(b=>b.addEventListener('click',()=>swDocType(b.dataset.dt)));
-
-  // Tabs
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>swTab(t.dataset.t)));
-
-  // Client tabs
   document.querySelectorAll('.ctab').forEach(t=>t.addEventListener('click',()=>switchClient(parseInt(t.dataset.c))));
-
-  // Acciones
   document.getElementById('btn-save').addEventListener('click',saveDraft);
   document.getElementById('btn-del-all').addEventListener('click',async()=>{
     if(!confirm('¿Eliminar todos los documentos de '+CLIENTS[activeIdx].label+'?'))return;
     S.drafts=[];rDrafts();await saveAll();toast('Documentos eliminados');
   });
   document.getElementById('btn-new').addEventListener('click',newDoc);
-  document.getElementById('btn-logout').addEventListener('click',()=>{ sessionStorage.removeItem('bob_auth');window.location.replace('../'); });
+  document.getElementById('btn-logout').addEventListener('click',()=>{sessionStorage.removeItem('bob_auth');window.location.replace('../');});
 
-  updLogo();buildContent();rPreview();rDrafts();
+  document.getElementById('ed-client-name').textContent='✦ '+CLIENTS[0].label;
   showLoading(false);
 }
 
