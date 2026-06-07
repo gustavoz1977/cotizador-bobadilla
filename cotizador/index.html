@@ -168,9 +168,11 @@ html,body{height:100%;overflow:hidden}
 .dcontact{text-align:center;font-size:10px;font-weight:700;margin-top:7px;padding-top:5px;border-top:1px solid #eee}
 
 /* Documento Maderera */
-.mad-doc{background:#fff;width:680px;min-width:680px;min-height:900px;padding:40px 48px 0;box-shadow:0 3px 18px rgba(0,0,0,.3);font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.6;color:#1a1a1a}
-.mad-logo-area{display:flex;align-items:center;gap:10px;margin-bottom:28px}
-.mad-logo-name{font-family:Georgia,serif;font-size:26px;letter-spacing:3px;color:#1a1a1a;font-weight:400}
+.mad-doc{background:#fff;width:680px;min-width:680px;font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.6;color:#1a1a1a;box-shadow:0 3px 18px rgba(0,0,0,.3)}
+.mad-print-header{padding:28px 48px 14px;background:#fff}
+.mad-logo-area{display:flex;align-items:center;gap:10px}
+.mad-logo-ph{font-size:11px;color:#aaa;border:1px dashed #ddd;padding:10px 18px;font-family:Arial,sans-serif}
+.mad-content{padding:0 48px 20px}
 .mad-date{margin-bottom:24px;font-size:13px}
 .mad-recipient{margin-bottom:20px;font-size:13px;line-height:1.5}
 .mad-saludo{margin-bottom:16px;font-size:13px}
@@ -199,17 +201,21 @@ html,body{height:100%;overflow:hidden}
 .mad-footer-brand{font-family:Georgia,serif;font-size:14px;letter-spacing:2px;color:#e8d5c4}
 
 @media print{
-  @page{size:letter portrait;margin:12mm}
+  @page{size:letter portrait;margin:0}
   html,body,#app{height:auto;overflow:visible;display:block}
   #client-bar,#editor,#loading{display:none!important}
   #main{display:block}
   #pvw{padding:0;background:none;overflow:visible;display:block}
-  .doc,.mad-doc{box-shadow:none;width:100%;min-width:unset;min-height:unset}
+  .doc{box-shadow:none;width:100%;min-width:unset;min-height:unset}
   .doc{padding:0}
-  .mad-doc{padding:8mm 12mm 0}
-  .mad-footer{margin:20px -48px 0}
   .dftr,.dsigs,.dcontact{page-break-inside:avoid}
-  .mad-firma-area,.mad-bank-box,.mad-footer{page-break-inside:avoid}
+  /* Maderera: header y footer fijos en cada hoja */
+  .mad-doc{box-shadow:none;width:100%;min-width:unset}
+  .mad-print-header{position:fixed;top:0;left:0;right:0;padding:8mm 14mm 5mm;background:#fff;border-bottom:1px solid #f0ece8;z-index:10}
+  .mad-print-footer{position:fixed;bottom:0;left:0;right:0;z-index:10}
+  .mad-content{margin-top:28mm;padding:0 14mm 22mm}
+  .mad-footer{margin:0}
+  .mad-firma-area,.mad-bank-box,.mad-precios-note{page-break-inside:avoid}
 }
 </style>
 </head>
@@ -412,12 +418,10 @@ function buildDatos(){
 
   if(isMad()){
     c.innerHTML=`
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;background:#1a2338;border-radius:4px;padding:10px 12px">
-        ${madLogoSVG(32,'#c07040')}
-        <div>
-          <div style="font-size:13px;font-weight:700;letter-spacing:2px;color:#c07040">MADERERA</div>
-          <div style="font-size:9px;color:#4b5563;letter-spacing:.5px">maderera.mx</div>
-        </div>
+      <div class="fl" style="margin-bottom:4px">Logo Maderera</div>
+      <div class="logo-box">
+        <input type="file" id="logo-inp" accept="image/*">
+        <div id="logo-prv" class="logo-ph">🏭&nbsp; Clic para subir logo</div>
       </div>
       <div class="g2">
         <div class="fg"><div class="fl">Fecha</div><input class="fi" id="f-fecha" value="${esc(S.fecha)}"></div>
@@ -430,15 +434,21 @@ function buildDatos(){
       </div>
       <div class="fg"><div class="fl">Destinatario</div><input class="fi" id="f-dest" placeholder="Arq. Maritza" value="${esc(S.madDest)}"></div>
       <div class="fg"><div class="fl">Tratamiento</div><input class="fi" id="f-trat" placeholder="Estimada Arquitecta" value="${esc(S.madTrat)}"></div>
-      <div class="fg"><div class="fl">Proyecto / Obra</div><input class="fi" id="f-proy" placeholder="Parral #32, Colonia Condesa, CDMX" value="${esc(S.madProyecto)}"></div>
-      <div class="fg"><div class="fl">Firmante</div><input class="fi" id="f-firm" placeholder="NOMBRE COMPLETO" value="${esc(S.madFirmante)}"></div>`;
+      <div class="fg"><div class="fl">Proyecto / Obra</div><input class="fi" id="f-proy" placeholder="Parral #32, Colonia Condesa, CDMX" value="${esc(S.madProyecto)}"></div>`;
 
+    updLogo();
     document.getElementById('f-fecha').addEventListener('input',e=>{S.fecha=e.target.value;rPreview();});
     document.getElementById('f-num').addEventListener('input',e=>{S.madNum=e.target.value;rPreview();});
     document.getElementById('f-dest').addEventListener('input',e=>{S.madDest=e.target.value;rPreview();});
     document.getElementById('f-trat').addEventListener('input',e=>{S.madTrat=e.target.value;rPreview();});
     document.getElementById('f-proy').addEventListener('input',e=>{S.madProyecto=e.target.value;rPreview();});
-    document.getElementById('f-firm').addEventListener('input',e=>{S.madFirmante=e.target.value;rPreview();});
+    document.getElementById('logo-inp').addEventListener('change',e=>{
+      const f=e.target.files[0]; if(!f)return;
+      if(f.size>4e6){toast('Logo muy grande (máx 4 MB)',true);return;}
+      const reader=new FileReader();
+      reader.onload=async ev=>{S.logoB64=ev.target.result;updLogo();rPreview();const ok=await saveAll();toast(ok?'✓ Logo guardado':'✓ Logo cargado',!ok);};
+      reader.readAsDataURL(f);
+    });
     document.getElementById('btn-num-rst').addEventListener('click',()=>{
       const val=prompt('Ajustar contador de presupuestos:',S.madCounter);
       if(val===null)return;
@@ -662,22 +672,23 @@ function rPreview(){
 }
 
 function rMadPreview(pvw){
-  const dest  = S.madDest  || 'Destinatario';
-  const trat  = S.madTrat  || 'Estimada/o';
-  const proy  = S.madProyecto || '[proyecto]';
-  const firm  = S.madFirmante|| 'NOMBRE APELLIDO';
+  const dest = S.madDest  || 'Destinatario';
+  const trat = S.madTrat  || 'Estimada/o';
+  const proy = S.madProyecto || '[proyecto]';
 
-  // Date in long Spanish format
-  const now = new Date();
   const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  const fechaLarga = S.fecha
-    ? (()=>{ const p=S.fecha.split('/'); return `${parseInt(p[0])} de ${meses[parseInt(p[1])-1]} de ${p[2]}`; })()
-    : `${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
+  const fechaLarga=S.fecha
+    ?(()=>{const p=S.fecha.split('/');return `${parseInt(p[0])} de ${meses[parseInt(p[1])-1]} de ${p[2]}`;})()
+    :(()=>{const n=new Date();return `${n.getDate()} de ${meses[n.getMonth()]} de ${n.getFullYear()}`;})();
+
+  const logoEl=S.logoB64
+    ?`<img src="${S.logoB64}" style="max-height:52px;max-width:200px;object-fit:contain">`
+    :`<div class="mad-logo-ph">Sin logo — subir en Datos</div>`;
 
   let itemsHtml='';
   (S.madItems||[]).forEach(item=>{
     if(!item.titulo&&!item.descripcion)return;
-    const precio = item.precio ? (item.precio.includes('$')?esc(item.precio):'$'+esc(item.precio)) : '';
+    const precio=item.precio?(item.precio.includes('$')?esc(item.precio):'$'+esc(item.precio)):'';
     itemsHtml+=`<div class="mad-item">
       <div class="mad-item-left">
         ${item.titulo?`<div class="mad-item-title">${esc(item.titulo)}</div>`:''}
@@ -687,47 +698,52 @@ function rMadPreview(pvw){
     </div>`;
   });
 
+  const footerBand=`<div class="mad-footer">
+    <div class="mad-footer-left">
+      <div class="mad-footer-item"><span>◉</span><span>${MAD.dir}</span></div>
+      <div class="mad-footer-item"><span>✉</span><span>${MAD.email}</span></div>
+      <div class="mad-footer-item"><span>✆</span><span>${MAD.tel}</span></div>
+    </div>
+    <div class="mad-footer-right">
+      <div class="mad-footer-brand">${MAD.web}</div>
+      ${madLogoSVG(26,'#e8d5c4')}
+    </div>
+  </div>`;
+
   pvw.innerHTML=`<div class="mad-doc">
-    <div class="mad-logo-area">
-      ${madLogoSVG(38,'#6b2e13')}
-      <div class="mad-logo-name">MADERERA</div>
+    <!-- HEADER: se repite en cada hoja al imprimir -->
+    <div class="mad-print-header">
+      <div class="mad-logo-area">${logoEl}</div>
     </div>
-    <div class="mad-date">Ciudad de México a, ${fechaLarga}</div>
-    <div class="mad-recipient">
-      <p>${esc(dest)}</p>
-      <p style="letter-spacing:3px;font-size:11px">P r e s e n t e</p>
-    </div>
-    <div class="mad-saludo">${esc(trat)} ${esc(dest)}:</div>
-    <div class="mad-intro">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Por este conducto tenemos mucho gusto en presentarles el siguiente presupuesto para el suministro e instalación de pisos de madera para el proyecto: ${esc(proy)}.</div>
-    ${itemsHtml}
-    <div class="mad-closing">
-      ${MAD.cierre.map(p=>`<p>${p}</p>`).join('')}
-    </div>
-    <div class="mad-firma-area">
-      <div class="mad-firma-word">ATENTAMENTE</div>
-      <div class="mad-firma-script">${esc(firm.split(' ').map(w=>w[0]||'').join('')+firm.split(' ').slice(-1)[0]||'Firma')}.</div>
-      <div class="mad-firma-line"></div>
-      <div class="mad-firma-nombre">${esc(firm)}</div>
-    </div>
-    <div class="mad-bank-box">
-      <div class="mad-bank-title">Datos para depósitos o transferencias:</div>
-      <div class="mad-bank-row"><span class="mad-bank-label">Banco:</span><span>${MAD.banco}</span></div>
-      <div class="mad-bank-row"><span class="mad-bank-label">Nombre:</span><span>${MAD.nombre}</span></div>
-      <div class="mad-bank-row"><span class="mad-bank-label">Clabe:</span><span>${MAD.clabe}</span></div>
-      <div class="mad-bank-row"><span class="mad-bank-label">Cuenta:</span><span>${MAD.cuenta}</span></div>
-      <div class="mad-bank-row"><span class="mad-bank-label">Mail:</span><span>${MAD.mail}</span></div>
-    </div>
-    <div class="mad-precios-note">Precios sujetos a cambio sin previo aviso</div>
-    <div class="mad-footer">
-      <div class="mad-footer-left">
-        <div class="mad-footer-item"><span>◉</span><span>${MAD.dir}</span></div>
-        <div class="mad-footer-item"><span>✉</span><span>${MAD.email}</span></div>
-        <div class="mad-footer-item"><span>✆</span><span>${MAD.tel}</span></div>
+    <!-- FOOTER: se repite en cada hoja al imprimir -->
+    <div class="mad-print-footer">${footerBand}</div>
+    <!-- CONTENIDO -->
+    <div class="mad-content">
+      <div class="mad-date">Ciudad de México a, ${fechaLarga}</div>
+      <div class="mad-recipient">
+        <p>${esc(dest)}</p>
+        <p style="letter-spacing:3px;font-size:11px">P r e s e n t e</p>
       </div>
-      <div class="mad-footer-right">
-        <div class="mad-footer-brand">${MAD.web}</div>
-        ${madLogoSVG(26,'#e8d5c4')}
+      <div class="mad-saludo">${esc(trat)} ${esc(dest)}:</div>
+      <div class="mad-intro">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Por este conducto tenemos mucho gusto en presentarles el siguiente presupuesto para el suministro e instalación de pisos de madera para el proyecto: ${esc(proy)}.</div>
+      ${itemsHtml}
+      <div class="mad-closing">${MAD.cierre.map(p=>`<p>${p}</p>`).join('')}</div>
+      <div class="mad-firma-area">
+        <div class="mad-firma-word">ATENTAMENTE</div>
+        <div class="mad-firma-line"></div>
+        <div class="mad-firma-nombre">AGUSTÍN LANDERO FLORES</div>
       </div>
+      <div class="mad-bank-box">
+        <div class="mad-bank-title">Datos para depósitos o transferencias:</div>
+        <div class="mad-bank-row"><span class="mad-bank-label">Banco:</span><span>${MAD.banco}</span></div>
+        <div class="mad-bank-row"><span class="mad-bank-label">Nombre:</span><span>${MAD.nombre}</span></div>
+        <div class="mad-bank-row"><span class="mad-bank-label">Clabe:</span><span>${MAD.clabe}</span></div>
+        <div class="mad-bank-row"><span class="mad-bank-label">Cuenta:</span><span>${MAD.cuenta}</span></div>
+        <div class="mad-bank-row"><span class="mad-bank-label">Mail:</span><span>${MAD.mail}</span></div>
+      </div>
+      <div class="mad-precios-note">Precios sujetos a cambio sin previo aviso</div>
+      <!-- Footer visible en pantalla (en impresión es el fixed) -->
+      <div style="margin-top:20px;margin-left:-48px;margin-right:-48px">${footerBand}</div>
     </div>
   </div>`;
 }
