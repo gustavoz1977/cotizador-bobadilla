@@ -264,7 +264,8 @@ html,body{height:100%;overflow:hidden}
       <div class="tc" data-t="bor">
         <div class="dbrow">
           <button class="db pri" id="btn-save">💾 Guardar</button>
-          <button class="db" id="btn-del-all">🗑 Limpiar todo</button>
+          <button class="db" id="btn-sync">🔄 Sincronizar</button>
+          <button class="db" id="btn-del-all">🗑 Limpiar</button>
         </div>
         <div class="fl" style="margin-bottom:5px">Documentos guardados</div>
         <div id="draft-list"><div class="no-d">No hay borradores</div></div>
@@ -355,14 +356,17 @@ function cacheRead(){ try{const v=localStorage.getItem(cacheKey());return v?JSON
 function cacheWrite(d){ try{localStorage.setItem(cacheKey(),JSON.stringify(d));}catch{} }
 
 // ── BLOB OPS ──
+// ── BLOB OPS ──
+let blobLoaded=false; // guard: no sobreescribir si la carga falló
 async function blobRead(){
-  const res=await fetch(blobUrl()+'&_t='+Date.now(),{cache:'no-store'});
+  const res=await fetch(blobUrl(),{cache:'no-store'});
   if(res.status===404)return null;
   if(!res.ok)throw new Error('HTTP '+res.status);
   return await res.json();
 }
 async function blobWrite(data){
-  const res=await fetch(blobUrl(),{method:'PUT',headers:{'x-ms-blob-type':'BlockBlob','Content-Type':'application/json','Cache-Control':'no-cache, no-store'},body:JSON.stringify(data)});
+  if(!blobLoaded){console.warn('blobWrite bloqueado: blob no cargado');return;}
+  const res=await fetch(blobUrl(),{method:'PUT',headers:{'x-ms-blob-type':'BlockBlob','Content-Type':'application/json'},body:JSON.stringify(data)});
   if(!res.ok)throw new Error('HTTP '+res.status);
 }
 function getBlob(){ return {counter:S.counter,reporteCounter:S.reporteCounter,madCounter:S.madCounter,drafts:S.drafts,logo:S.logoB64}; }
@@ -831,15 +835,19 @@ async function newDoc(){
 
 // ── LOAD FROM BLOB ──
 async function loadClientFromBlob(){
+  blobLoaded=false;
   let loaded=false;
   try{
     const data=await blobRead();
     if(data){
       S.counter=data.counter||1;S.reporteCounter=data.reporteCounter||1;
       S.madCounter=data.madCounter||1;S.drafts=data.drafts||[];S.logoB64=data.logo||null;
-      cacheWrite(data);loaded=true;
+      cacheWrite(data);loaded=true;blobLoaded=true;
+    } else {
+      // 404: primer uso, blob vacío — es seguro escribir
+      blobLoaded=true;
     }
-  }catch(e){console.warn(e);}
+  }catch(e){console.warn('blobRead error:',e);}
   if(!loaded){
     const cache=cacheRead();
     if(cache){S.counter=cache.counter||1;S.reporteCounter=cache.reporteCounter||1;S.madCounter=cache.madCounter||1;S.drafts=cache.drafts||[];S.logoB64=cache.logo||null;}
@@ -873,6 +881,14 @@ async function init(){
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>swTab(t.dataset.t)));
   document.querySelectorAll('.ctab').forEach(t=>t.addEventListener('click',()=>switchClient(parseInt(t.dataset.c))));
   document.getElementById('btn-save').addEventListener('click',saveDraft);
+  document.getElementById('btn-sync').addEventListener('click',async()=>{
+    showLoading(true);
+    S=freshState();
+    await loadClientFromBlob();
+    buildDatos();buildContent();rPreview();rDrafts();
+    showLoading(false);
+    toast('🔄 Sincronizado con la nube');
+  });
   document.getElementById('btn-del-all').addEventListener('click',async()=>{
     if(!confirm('¿Eliminar todos los documentos de '+CLIENTS[activeIdx].label+'?'))return;
     S.drafts=[];rDrafts();await saveAll();toast('Documentos eliminados');
