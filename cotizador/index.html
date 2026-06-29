@@ -356,13 +356,13 @@ function cacheWrite(d){ try{localStorage.setItem(cacheKey(),JSON.stringify(d));}
 
 // ── BLOB OPS ──
 async function blobRead(){
-  const res=await fetch(blobUrl());
+  const res=await fetch(blobUrl()+'&_t='+Date.now(),{cache:'no-store'});
   if(res.status===404)return null;
   if(!res.ok)throw new Error('HTTP '+res.status);
   return await res.json();
 }
 async function blobWrite(data){
-  const res=await fetch(blobUrl(),{method:'PUT',headers:{'x-ms-blob-type':'BlockBlob','Content-Type':'application/json'},body:JSON.stringify(data)});
+  const res=await fetch(blobUrl(),{method:'PUT',headers:{'x-ms-blob-type':'BlockBlob','Content-Type':'application/json','Cache-Control':'no-cache, no-store'},body:JSON.stringify(data)});
   if(!res.ok)throw new Error('HTTP '+res.status);
 }
 function getBlob(){ return {counter:S.counter,reporteCounter:S.reporteCounter,madCounter:S.madCounter,drafts:S.drafts,logo:S.logoB64}; }
