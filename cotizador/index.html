@@ -362,7 +362,7 @@ function cacheWrite(d){ try{localStorage.setItem(cacheKey(),JSON.stringify(d));}
 // ── BLOB OPS ──
 let blobLoaded=false; // guard: no sobreescribir si la carga falló
 async function blobRead(){
-  const res=await fetch(blobUrl(),{cache:'no-store'});
+  const res=await fetch(blobUrl());
   if(res.status===404)return null;
   if(!res.ok)throw new Error('HTTP '+res.status);
   return await res.json();
