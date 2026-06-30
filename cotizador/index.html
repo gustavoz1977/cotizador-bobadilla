@@ -110,6 +110,7 @@ html,body{height:100%;overflow:hidden}
 .dtype-badge{font-size:8px;padding:1px 5px;border-radius:2px;font-weight:700;margin-left:5px}
 .dtype-badge.cot{background:rgba(249,115,22,.15);color:#f97316}
 .dtype-badge.rep{background:rgba(59,130,246,.15);color:#3b82f6}
+.dtype-badge.rem{background:rgba(124,52,152,.15);color:#a855f7}
 .dtype-badge.mad{background:rgba(124,61,30,.2);color:#c07040}
 .ddel{font-size:16px;color:#374151;cursor:pointer;padding:0 3px;line-height:1}
 .ddel:hover{color:#ef4444}
@@ -120,6 +121,7 @@ html,body{height:100%;overflow:hidden}
 .bpr{flex:1;color:#fff;border:none;border-radius:4px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.8px;font-family:inherit;transition:background .2s}
 .bpr.cot{background:#f97316}.bpr.cot:hover{background:#e06010}
 .bpr.rep{background:#3b82f6}.bpr.rep:hover{background:#2563eb}
+.bpr.rem{background:#7c3498}.bpr.rem:hover{background:#5c2474}
 .bpr.mad{background:#7c3d1e}.bpr.mad:hover{background:#5c2d14}
 .bnw{background:#1f2937;color:#9ca3af;border:1px solid #374151;border-radius:4px;padding:9px 12px;font-size:12px;cursor:pointer;font-family:inherit}
 .bnw:hover{color:#d1d5db;background:#374151}
@@ -330,6 +332,7 @@ function freshState(){
     fecha:todayS(), cot:'0001', cli:'', prov:'', ubi:'', ot:'', cr:'',
     rows:initRows(15), counter:1,
     rep:'0001', reporteTitulo:'', reporteTexto:'', reporteCounter:1,
+    rem:'0001', remCounter:1,
     madNum:'0001', madCounter:1,
     madDest:'', madTrat:'Estimada/o', madProyecto:'', madFirmante:'',
     madItems:[freshMadItem()],
@@ -369,7 +372,7 @@ async function blobWrite(data){
   const res=await fetch(blobUrl(),{method:'PUT',headers:{'x-ms-blob-type':'BlockBlob','Content-Type':'application/json'},body:JSON.stringify(data)});
   if(!res.ok)throw new Error('HTTP '+res.status);
 }
-function getBlob(){ return {counter:S.counter,reporteCounter:S.reporteCounter,madCounter:S.madCounter,drafts:S.drafts,logo:S.logoB64}; }
+function getBlob(){ return {counter:S.counter,reporteCounter:S.reporteCounter,remCounter:S.remCounter,madCounter:S.madCounter,drafts:S.drafts,logo:S.logoB64}; }
 
 // ── SYNC ──
 function syncSt(st){ const el=document.getElementById('sync-st'); if(!el)return; el.className=st; el.textContent=st==='ok'?'☁ Sincronizado':st==='ing'?'↻ Guardando…':'⚠ Sin conexión'; }
@@ -385,10 +388,14 @@ function swTab(n){ document.querySelectorAll('.tab').forEach(t=>t.classList.togg
 // ── DOC TYPE ──
 function swDocType(dt){
   S.docType=dt;
-  document.querySelectorAll('.dtype-btn').forEach(b=>b.classList.toggle('on',b.dataset.dt===dt));
-  const tt=document.getElementById('tab-trab'); if(tt) tt.textContent=isCot()?'🔧 Trabajos':'📝 Reporte';
-  const bp=document.getElementById('btn-print'); if(bp) bp.className='bpr '+(isCot()?'cot':'rep');
-  buildContent(); rPreview();
+  const tt=document.getElementById('tab-trab');
+  if(tt) tt.textContent=dt==='reporte'?'📝 Reporte':dt==='remision'?'📦 Remisión':'🔧 Trabajos';
+  const bp=document.getElementById('btn-print');
+  if(bp) bp.className='bpr '+(dt==='reporte'?'rep':dt==='remision'?'rem':'cot');
+  const nl=document.getElementById('num-label');
+  if(nl) nl.textContent=dt==='cotizacion'?'Cotización #':dt==='reporte'?'Reporte #':'Remisión #';
+  setV('f-num',dt==='cotizacion'?S.cot:dt==='reporte'?S.rep:S.rem);
+  buildContent();rPreview();
 }
 
 // ── DOM HELPERS ──
@@ -472,9 +479,13 @@ function buildDatos(){
 
   // Regular clients
   c.innerHTML=`
-    <div class="dtype-wrap">
-      <button class="dtype-btn ${isCot()?'on cot':'cot'}" data-dt="cotizacion">📋 Cotización</button>
-      <button class="dtype-btn ${!isCot()?'on rep':'rep'}" data-dt="reporte">🔍 Reporte de Daños</button>
+    <div class="fg" style="margin-bottom:12px">
+      <div class="fl">Tipo de documento</div>
+      <select class="fi" id="dtype-select" style="font-weight:600;cursor:pointer">
+        <option value="cotizacion" ${S.docType==='cotizacion'?'selected':''}>📋 Cotización</option>
+        <option value="reporte"    ${S.docType==='reporte'   ?'selected':''}>🔍 Reporte de Daños</option>
+        <option value="remision"   ${S.docType==='remision'  ?'selected':''}>📦 Remisión</option>
+      </select>
     </div>
     <div class="fl" style="margin-bottom:4px">Logo del taller</div>
     <div class="logo-box">
@@ -484,9 +495,9 @@ function buildDatos(){
     <div class="g2">
       <div class="fg"><div class="fl">Fecha</div><input class="fi" id="f-fecha" value="${esc(S.fecha)}"></div>
       <div class="fg">
-        <div class="fl" id="num-label">${isCot()?'Cotización #':'Reporte #'}</div>
+        <div class="fl" id="num-label">${S.docType==='cotizacion'?'Cotización #':S.docType==='reporte'?'Reporte #':'Remisión #'}</div>
         <div class="cot-row">
-          <input class="fi" id="f-num" style="font-weight:700;letter-spacing:1px" value="${esc(isCot()?S.cot:S.rep)}">
+          <input class="fi" id="f-num" style="font-weight:700;letter-spacing:1px" value="${esc(S.docType==='cotizacion'?S.cot:S.docType==='reporte'?S.rep:S.rem)}">
           <button class="cot-btn" id="btn-num-rst">↺</button>
         </div>
       </div>
@@ -505,7 +516,7 @@ function buildDatos(){
   updLogo();
 
   document.getElementById('f-fecha').addEventListener('input',e=>{S.fecha=e.target.value;rPreview();});
-  document.getElementById('f-num').addEventListener('input',e=>{ if(isCot())S.cot=e.target.value; else S.rep=e.target.value; rPreview();});
+  document.getElementById('f-num').addEventListener('input',e=>{ if(S.docType==='cotizacion')S.cot=e.target.value;else if(S.docType==='reporte')S.rep=e.target.value;else S.rem=e.target.value; rPreview();});
   document.getElementById('f-cli').addEventListener('input',e=>{S.cli=e.target.value;rPreview();});
   document.getElementById('f-prov').addEventListener('input',e=>{S.prov=e.target.value;rPreview();});
   document.getElementById('f-ubi').addEventListener('input',e=>{S.ubi=e.target.value;rPreview();});
@@ -521,17 +532,17 @@ function buildDatos(){
   });
 
   document.getElementById('btn-num-rst').addEventListener('click',()=>{
-    const cur=isCot()?S.counter:S.reporteCounter;
+    const cur=S.docType==='cotizacion'?S.counter:S.docType==='reporte'?S.reporteCounter:S.remCounter;
     const val=prompt(`Ajustar contador:`,cur);
     if(val===null)return;
     const n=parseInt(val); if(isNaN(n)||n<0){toast('Número inválido',true);return;}
     if(isCot()){S.counter=n;S.cot=String(n).padStart(4,'0');}
     else{S.reporteCounter=n;S.rep=String(n).padStart(4,'0');}
-    setV('f-num',isCot()?S.cot:S.rep); rPreview();
+    setV('f-num',S.docType==='cotizacion'?S.cot:S.docType==='reporte'?S.rep:S.rem); rPreview();
     saveAll().then(ok=>toast(ok?`✓ Contador ajustado`:'✓ Ajustado',!ok));
   });
 
-  document.querySelectorAll('.dtype-btn').forEach(b=>b.addEventListener('click',()=>swDocType(b.dataset.dt)));
+  document.getElementById('dtype-select').addEventListener('change',e=>swDocType(e.target.value));
 }
 
 // ── BUILD TRABAJOS / REPORTE / MADERERA ──
@@ -577,7 +588,7 @@ function buildContent(){
     return;
   }
 
-  if(!isCot()){
+  if(!isCot()&&S.docType!=='remision'){
     if(tt) tt.textContent='📝 Reporte';
     const bp=document.getElementById('btn-print'); if(bp) bp.className='bpr rep';
     c.innerHTML=`
@@ -595,8 +606,8 @@ function buildContent(){
     return;
   }
 
-  if(tt) tt.textContent='🔧 Trabajos';
-  const bp=document.getElementById('btn-print'); if(bp) bp.className='bpr cot';
+  if(tt) tt.textContent=S.docType==='remision'?'📦 Remisión':'🔧 Trabajos';
+  const bp=document.getElementById('btn-print'); if(bp) bp.className='bpr '+(S.docType==='remision'?'rem':'cot');
   let h=`<div class="ihead"><span></span><div class="ihl">Descripción</div><div class="ihl">Cant.</div><div class="ihl">P. Unit.</div><div class="ihl">Sub.</div><div class="ihl"></div></div>`;
   S.rows.forEach((r,i)=>{
     const sub=rSub(r);
@@ -639,8 +650,8 @@ function rPreview(){
 
   // Bobadilla preview
   const logoEl=S.logoB64?`<img src="${S.logoB64}" style="max-width:141px;max-height:107px;object-fit:contain">`:logoSVG();
-  const numLabel=isCot()?'COTIZACIÓN':'REPORTE';
-  const numVal=isCot()?S.cot:S.rep;
+  const numLabel=S.docType==='cotizacion'?'COTIZACIÓN':S.docType==='reporte'?'REPORTE':'REMISIÓN';
+  const numVal=S.docType==='cotizacion'?S.cot:S.docType==='reporte'?S.rep:S.rem;
   let body='';
   if(isCot()){
     const gt=gTotal();
@@ -765,7 +776,7 @@ function rDrafts(){
   c.innerHTML=S.drafts.map(d=>{
     const dt=d.data&&d.data.docType;
     const m=d.data&&d.data.madNum;
-    const badge=m?'<span class="dtype-badge mad">PRES</span>':dt==='reporte'?'<span class="dtype-badge rep">REP</span>':'<span class="dtype-badge cot">COT</span>';
+    const badge=m?'<span class="dtype-badge mad">PRES</span>':dt==='reporte'?'<span class="dtype-badge rep">REP</span>':dt==='remision'?'<span class="dtype-badge rem">REM</span>':'<span class="dtype-badge cot">COT</span>';
     return `<div class="ditem" data-id="${d.id}">
       <div><div class="dname">${esc(d.name)}${badge}</div><div class="ddate">${d.date}</div></div>
       <span class="ddel" data-id="${d.id}">×</span>
@@ -780,8 +791,9 @@ function rDrafts(){
 async function saveDraft(){
   let prefix,num,desc;
   if(isMad()){prefix='PRES';num=S.madNum;desc=S.madDest||S.madProyecto;}
-  else if(isCot()){prefix='COT';num=S.cot;desc=S.cli;}
-  else{prefix='REP';num=S.rep;desc=S.cli;}
+  else if(S.docType==='cotizacion'){prefix='COT';num=S.cot;desc=S.cli;}
+  else if(S.docType==='reporte'){prefix='REP';num=S.rep;desc=S.cli;}
+  else{prefix='REM';num=S.rem;desc=S.cli;}
   const name=`${prefix}-${num}${desc?' — '+desc:''}`;
   const now=new Date();
   const date=now.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
@@ -801,6 +813,7 @@ function loadDraft(d){
     prov:x.prov||'',ubi:x.ubi||'',ot:x.ot||'',cr:x.cr||'',
     rows:x.rows||initRows(15),
     rep:x.rep||'0001',reporteTitulo:x.reporteTitulo||'',reporteTexto:x.reporteTexto||'',
+    rem:x.rem||'0001',
     madNum:x.madNum||'0001',madDest:x.madDest||'',madTrat:x.madTrat||'Estimada/o',
     madProyecto:x.madProyecto||'',madFirmante:x.madFirmante||'',
     madItems:x.madItems||[freshMadItem()],
@@ -822,14 +835,17 @@ async function newDoc(){
   } else if(isCot()){
     S.counter++;S.cot=String(S.counter).padStart(4,'0');
     S.fecha=todayS();S.cli='';S.prov='';S.ubi='';S.ot='';S.cr='';S.rows=initRows(15);
-  } else {
+  } else if(S.docType==='reporte'){
     S.reporteCounter++;S.rep=String(S.reporteCounter).padStart(4,'0');
     S.fecha=todayS();S.cli='';S.prov='';S.ubi='';S.ot='';S.cr='';
     S.reporteTitulo='';S.reporteTexto='';
+  } else {
+    S.remCounter++;S.rem=String(S.remCounter).padStart(4,'0');
+    S.fecha=todayS();S.cli='';S.prov='';S.ubi='';S.ot='';S.cr='';S.rows=initRows(15);
   }
   buildDatos();buildContent();rPreview();swTab('datos');await saveAll();
-  const prefix=isMad()?'PRES':isCot()?'COT':'REP';
-  const num=isMad()?S.madNum:isCot()?S.cot:S.rep;
+  const prefix=isMad()?'PRES':S.docType==='cotizacion'?'COT':S.docType==='reporte'?'REP':'REM';
+  const num=isMad()?S.madNum:S.docType==='cotizacion'?S.cot:S.docType==='reporte'?S.rep:S.rem;
   toast(`✓ Nuevo ${prefix}-${num}`);
 }
 
@@ -841,6 +857,7 @@ async function loadClientFromBlob(){
     const data=await blobRead();
     if(data){
       S.counter=data.counter||1;S.reporteCounter=data.reporteCounter||1;
+      S.remCounter=data.remCounter||1;
       S.madCounter=data.madCounter||1;S.drafts=data.drafts||[];S.logoB64=data.logo||null;
       cacheWrite(data);loaded=true;blobLoaded=true;
     } else {
@@ -850,11 +867,12 @@ async function loadClientFromBlob(){
   }catch(e){console.warn('blobRead error:',e);}
   if(!loaded){
     const cache=cacheRead();
-    if(cache){S.counter=cache.counter||1;S.reporteCounter=cache.reporteCounter||1;S.madCounter=cache.madCounter||1;S.drafts=cache.drafts||[];S.logoB64=cache.logo||null;}
+    if(cache){S.counter=cache.counter||1;S.reporteCounter=cache.reporteCounter||1;S.remCounter=cache.remCounter||1;S.madCounter=cache.madCounter||1;S.drafts=cache.drafts||[];S.logoB64=cache.logo||null;}
     syncSt('err');
   }else{syncSt('ok');}
   S.cot=String(S.counter).padStart(4,'0');
   S.rep=String(S.reporteCounter).padStart(4,'0');
+  S.rem=String(S.remCounter).padStart(4,'0');
   S.madNum=String(S.madCounter).padStart(4,'0');
 }
 
