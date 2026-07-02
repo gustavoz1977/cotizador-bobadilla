@@ -653,7 +653,7 @@ function rPreview(){
   const numLabel=S.docType==='cotizacion'?'COTIZACIÓN':S.docType==='reporte'?'REPORTE':'REMISIÓN';
   const numVal=S.docType==='cotizacion'?S.cot:S.docType==='reporte'?S.rep:S.rem;
   let body='';
-  if(isCot()){
+  if(isCot()||S.docType==='remision'){
     const gt=gTotal();
     let rows='';
     S.rows.forEach((r,i)=>{
@@ -668,7 +668,7 @@ function rPreview(){
     body=`${S.reporteTitulo?`<div class="rep-titulo-doc">${esc(S.reporteTitulo)}</div>`:''}
       <div class="rep-body-doc">${esc(S.reporteTexto).replace(/\n/g,'<br>')}</div>`;
   }
-  const gt=isCot()?gTotal():0;
+  const gt=(isCot()||S.docType==='remision')?gTotal():0;
   pvw.innerHTML=`<div class="doc">
     <div class="dhead"><div class="dlogw">${logoEl}</div>
       <div class="dtitle"><div class="dt1">TALLER DE SERVICIO Y SOLDADURA</div><div class="dt2">BOBADILLA</div><div class="dt3">MECÁNICA Y TODO TIPO DE SOLDADURA</div></div>
@@ -685,7 +685,7 @@ function rPreview(){
     <div class="dftr">
       <div class="dft-ot"><strong>O. T.</strong>&nbsp;&nbsp;${esc(S.ot)}</div>
       <div class="dft-cr"><strong>${crLbl()} -</strong>&nbsp;&nbsp;${esc(S.cr)}</div>
-      ${isCot()?`<div class="dft-tot">TOTAL:&nbsp;<span style="font-size:12px">${gt>0?fmt(gt):''}</span></div>`:`<div class="dft-tot"></div>`}
+      ${(isCot()||S.docType==='remision')?`<div class="dft-tot">TOTAL:&nbsp;<span style="font-size:12px">${gt>0?fmt(gt):''}</span></div>`:`<div class="dft-tot"></div>`}
     </div>
     <div class="dsigs"><div class="dsig">FIRMA</div><div class="dsig">FIRMA</div><div class="dsig">FIRMA</div></div>
     <div class="dcontact">CÉSAR BOBADILLA RÍOS&nbsp;&nbsp;|&nbsp;&nbsp;CEL. 55 3944 9553 / 55 2116 5737</div>
