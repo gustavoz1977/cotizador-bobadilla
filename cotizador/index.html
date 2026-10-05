@@ -178,6 +178,10 @@ html,body{height:100%;overflow:hidden}
 .mad-print-footer{display:none}
 .mad-screen-footer{display:none}
 .mad-content{padding:105px 48px 90px}
+/* Paginación: thead/tfoot se repiten en cada hoja impresa y reservan el área del membrete */
+.mad-pg{width:100%;border-collapse:collapse;border-spacing:0}
+.mad-pg td{padding:0;vertical-align:top}
+.mad-hdr-space,.mad-ftr-space{height:0}
 .mad-date{margin-bottom:24px;font-size:13px}
 .mad-recipient{margin-bottom:20px;font-size:13px;line-height:1.5}
 .mad-saludo{margin-bottom:16px;font-size:13px}
@@ -221,7 +225,17 @@ html,body{height:100%;overflow:hidden}
   .mad-print-header{display:none}
   .mad-print-footer{display:none}
   .mad-screen-footer{display:none}
-  .mad-content{margin-top:35mm;padding:0 14mm 32mm}
+  .mad-content{margin:0;padding:0 14mm}
+  /* Área segura: logo termina ~30mm, banda café empieza ~250mm (hoja carta 279mm) */
+  .mad-hdr-space{height:38mm}
+  .mad-ftr-space{height:36mm}
+  .mad-pg thead{display:table-header-group}
+  .mad-pg tfoot{display:table-footer-group}
+  .mad-item,.mad-cierre-bloque{break-inside:avoid;page-break-inside:avoid}
+  /* Conceptos largos (marcados por JS) sí pueden partirse, sin dejar líneas sueltas */
+  .mad-item.mad-item-split{break-inside:auto;page-break-inside:auto}
+  .mad-item-title{break-after:avoid;page-break-after:avoid}
+  .mad-item-desc{orphans:3;widows:3}
   .mad-footer{margin:0}
   .mad-firma-area,.mad-bank-box,.mad-precios-note{page-break-inside:avoid}
 }
@@ -738,7 +752,11 @@ function rMadPreview(pvw){
     </div>
     <!-- FOOTER: se repite en cada hoja al imprimir -->
     <div class="mad-print-footer">${footerBand}</div>
-    <!-- CONTENIDO -->
+    <!-- CONTENIDO (tabla de paginación: thead/tfoot = espacio del membrete en cada hoja) -->
+    <table class="mad-pg">
+    <thead><tr><td><div class="mad-hdr-space"></div></td></tr></thead>
+    <tfoot><tr><td><div class="mad-ftr-space"></div></td></tr></tfoot>
+    <tbody><tr><td>
     <div class="mad-content">
       <div class="mad-date">Ciudad de México a, ${fechaLarga}</div>
       <div class="mad-recipient">
@@ -748,6 +766,7 @@ function rMadPreview(pvw){
       <div class="mad-saludo">${esc(trat)} ${esc(dest)}:</div>
       <div class="mad-intro">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Por este conducto tenemos mucho gusto en presentarles el siguiente presupuesto para el suministro e instalación de pisos de madera para el proyecto: ${esc(proy)}.</div>
       ${itemsHtml}
+      <div class="mad-cierre-bloque">
       <div class="mad-closing">${MAD.cierre.map(p=>`<p>${p}</p>`).join('')}</div>
       <div class="mad-firma-area">
         <div class="mad-firma-word">ATENTAMENTE</div>
@@ -763,10 +782,18 @@ function rMadPreview(pvw){
         <div class="mad-bank-row"><span class="mad-bank-label">Mail:</span><span>${MAD.mail}</span></div>
       </div>
       <div class="mad-precios-note">Precios sujetos a cambio sin previo aviso</div>
+      </div>
       <!-- Footer visible en pantalla -->
       <div class="mad-screen-footer">${footerBand}</div>
     </div>
+    </td></tr></tbody>
+    </table>
   </div>`;
+  // Conceptos que ocupan más de ~media hoja útil se dejan partir entre páginas;
+  // los cortos se mueven completos a la siguiente hoja si no caben.
+  pvw.querySelectorAll('.mad-item').forEach(el=>{
+    if(el.offsetHeight>380) el.classList.add('mad-item-split');
+  });
 }
 
 // ── BORRADORES ──
